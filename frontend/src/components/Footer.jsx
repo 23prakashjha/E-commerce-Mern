@@ -88,7 +88,7 @@ const Footer = () => {
       <div className="border-t border-gray-800">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between text-sm text-gray-400 gap-2">
           <p>&copy; {new Date().getFullYear()} ShopEase. All rights reserved.</p>
-          <p>Designed with ❤️ using React & Tailwind CSS</p>
+          <p>Designed with ❤️ Prakash Jha</p>
         </div>
       </div>
     </footer>
