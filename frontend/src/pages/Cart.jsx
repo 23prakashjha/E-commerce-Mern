@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://e-commerce-mern-9snn.onrender.com";
 
 const Cart = () => {
   const navigate = useNavigate();
