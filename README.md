@@ -178,8 +178,6 @@ Easy integration with third-party services (payments, shipping, analytics)
 
 Planned and possible extensions include:
 
-Payment gateway integration (Stripe / Razorpay / PayPal)
-
 Product reviews and ratings
 
 Wishlist functionality
@@ -266,12 +264,14 @@ Fetches orders specific to the logged-in user.
 GET /api/users
 Retrieves all registered users (admin access).
 
-Backend Setup
+Backend Setup:
+
 cd backend
 npm install
 npm run dev
 
-Frontend Setup
+Frontend Setup:
+
 cd frontend
 npm install
 npm run dev
