@@ -4,7 +4,7 @@ import { Trash2, Edit, Plus, Search, Package, Upload, X } from "lucide-react";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://e-commerce-mern-9snn.onrender.com";
 
 const emptyProduct = {
   name: "",

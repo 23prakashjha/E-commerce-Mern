@@ -4,7 +4,7 @@ import { api } from "../services/api";
 import { Package, ArrowLeft, Star } from "lucide-react";
 import { motion } from "framer-motion";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://e-commerce-mern-9snn.onrender.com";
 const FALLBACK_IMAGE = "/images/placeholder.jpg";
 
 const CategoryProducts = () => {

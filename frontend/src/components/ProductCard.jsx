@@ -1,7 +1,7 @@
 import { motion } from "framer-motion";
 import { Package, Star } from "lucide-react";
 
-const API_URL = "http://localhost:5000"; // Ensure this matches your backend
+const API_URL = "https://e-commerce-mern-9snn.onrender.com"; // Ensure this matches your backend
 const FALLBACK_IMAGE = "/images/placeholder.jpg";
 
 const ProductCard = ({ product }) => {
