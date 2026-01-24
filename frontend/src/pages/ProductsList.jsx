@@ -3,7 +3,7 @@ import { api } from "../services/api";
 import { Link } from "react-router-dom";
 import { Search, ChevronLeft, ChevronRight } from "lucide-react";
 
-const API_URL = "http://localhost:5000"; // Add your backend URL
+const API_URL = "https://e-commerce-mern-9snn.onrender.com"; // Add your backend URL
 
 const categories = ["All", "Men", "Women", "Children"];
 const subCategories = [
