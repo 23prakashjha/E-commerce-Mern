@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { AuthContext } from "../context/AuthContext";
 
-const API_URL = "http://localhost:5000";
+const API_URL = "https://e-commerce-mern-9snn.onrender.com";
 const CATEGORY_TABS = ["mens", "womens", "children"];
 const DEFAULT_SIZES = ["XS", "S", "M", "L", "XL", "XXL", "3XL", "4XL"];
 
