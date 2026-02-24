@@ -1,3 +1,5 @@
+https://github.com/23prakashjha/E-commerce-Mern/blob/330e48d12fffe4014b8442099b429de364cb1b77/Emern.PNG
+
 ShopEase – MERN E-Commerce Web Application
 
 ShopEase is a full-stack E-Commerce web application developed using the MERN stack (MongoDB, Express.js, React, Node.js). The project is designed to simulate a real-world online shopping platform with a focus on scalability, clean architecture, and a smooth user experience.
