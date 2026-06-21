@@ -20,7 +20,7 @@ export const createOrder = async (req, res) => {
     const orderItems = cart.items.map((item) => ({
       product: item.product._id,
       name: item.product.name,
-      image: item.product.image,
+      image: item.product.images?.[0] || item.product.image || "",
       price: item.product.price,
       quantity: item.quantity,
     }));

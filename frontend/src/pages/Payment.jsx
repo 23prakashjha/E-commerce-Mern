@@ -86,7 +86,7 @@ const Payment = () => {
             {cartItems.map((item) => (
               <div key={item.product?._id} className="flex justify-between border-b pb-2 text-sm hover:bg-orange-50 rounded-md px-2 transition">
                 <span>{item.product?.name} × {item.quantity}</span>
-                <span className="font-medium">${(item.product?.price * item.quantity).toFixed(2)}</span>
+                <span className="font-medium">₹{(item.product?.price * item.quantity).toFixed(2)}</span>
               </div>
             ))}
 
@@ -97,7 +97,7 @@ const Payment = () => {
 
             <div className="flex justify-between font-bold text-lg border-t pt-4 mt-2">
               <span>Total</span>
-              <span>${total.toFixed(2)}</span>
+              <span>₹{total.toFixed(2)}</span>
             </div>
           </div>
 

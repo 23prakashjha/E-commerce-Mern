@@ -1,55 +1,62 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useCallback } from "react";
 import { api } from "../services/api";
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Load user from localStorage if exists
   const [user, setUser] = useState(() => {
     try {
-      const savedUser = localStorage.getItem("user");
-      return savedUser ? JSON.parse(savedUser) : null;
-    } catch (err) {
-      console.error("Failed to parse user from localStorage", err);
+      const saved = localStorage.getItem("user");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
       return null;
     }
   });
 
-  // Login function
-  const login = async ({ email, password }) => {
-    try {
-      const res = await api.post("/auth/login", { email, password });
-      if (res.data) {
-        setUser(res.data);
-        localStorage.setItem("user", JSON.stringify(res.data));
-      }
-      return res.data;
-    } catch (err) {
-      console.error("Login failed:", err.response || err);
-      throw err;
+  const login = useCallback(async ({ email, password }) => {
+    const res = await api.post("/auth/login", { email, password });
+    if (res.data) {
+      setUser(res.data);
+      localStorage.setItem("user", JSON.stringify(res.data));
     }
-  };
+    return res.data;
+  }, []);
 
-  // Register function
-  const register = async (data) => {
-    try {
-      await api.post("/auth/register", data);
-    } catch (err) {
-      console.error("Registration failed:", err.response || err);
-      throw err;
+  const register = useCallback(async (data) => {
+    const res = await api.post("/auth/register", data);
+    if (res.data) {
+      setUser(res.data);
+      localStorage.setItem("user", JSON.stringify(res.data));
     }
-  };
+    return res.data;
+  }, []);
 
-  // Logout function
-  const logout = () => {
+  const adminLogin = useCallback(async ({ email, password }) => {
+    const res = await api.post("/auth/login-admin", { email, password });
+    if (res.data) {
+      setUser(res.data);
+      localStorage.setItem("user", JSON.stringify(res.data));
+    }
+    return res.data;
+  }, []);
+
+  const registerAdmin = useCallback(async (data) => {
+    const res = await api.post("/auth/register-admin", data);
+    if (res.data) {
+      setUser(res.data);
+      localStorage.setItem("user", JSON.stringify(res.data));
+    }
+    return res.data;
+  }, []);
+
+  const logout = useCallback(() => {
     setUser(null);
     localStorage.removeItem("user");
-  };
+  }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, adminLogin, registerAdmin, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
