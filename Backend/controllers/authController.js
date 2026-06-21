@@ -7,27 +7,21 @@ const generateToken = (id) => {
   });
 };
 
-// POST /api/auth/register
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
-
   if (!name || !email || !password) {
     return res.status(400).json({ message: "All fields are required" });
   }
-
   try {
     const userExists = await User.findOne({ email: email.toLowerCase() });
-
     if (userExists) {
       return res.status(400).json({ message: "User already exists" });
     }
-
     const user = await User.create({
       name,
       email: email.toLowerCase(),
       password,
     });
-
     res.status(201).json({
       _id: user._id,
       name: user.name,
@@ -41,13 +35,10 @@ export const registerUser = async (req, res) => {
   }
 };
 
-// POST /api/auth/login
 export const authUser = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     const user = await User.findOne({ email: email.toLowerCase() });
-
     if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,
@@ -61,6 +52,56 @@ export const authUser = async (req, res) => {
     }
   } catch (error) {
     console.error("Login Error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const registerAdmin = async (req, res) => {
+  const { name, email, password } = req.body;
+  if (!name || !email || !password) {
+    return res.status(400).json({ message: "All fields are required" });
+  }
+  try {
+    const existing = await User.findOne({ email: email.toLowerCase() });
+    if (existing) {
+      return res.status(400).json({ message: "Admin already exists with this email" });
+    }
+    const admin = await User.create({
+      name,
+      email: email.toLowerCase(),
+      password,
+      isAdmin: true,
+    });
+    res.status(201).json({
+      _id: admin._id,
+      name: admin.name,
+      email: admin.email,
+      isAdmin: admin.isAdmin,
+      token: generateToken(admin._id),
+    });
+  } catch (error) {
+    console.error("Admin Register Error:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export const authAdmin = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email: email.toLowerCase(), isAdmin: true });
+    if (user && (await user.matchPassword(password))) {
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(401).json({ message: "Invalid admin credentials" });
+    }
+  } catch (error) {
+    console.error("Admin Login Error:", error);
     res.status(500).json({ message: error.message });
   }
 };

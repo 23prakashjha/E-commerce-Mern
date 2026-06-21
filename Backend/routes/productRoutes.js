@@ -7,25 +7,14 @@ import {
   deleteProduct,
 } from "../controllers/productController.js";
 import upload from "../middleware/upload.js";
+import { protect, admin } from "../middleware/auth.js";
 
 const router = express.Router();
 
-/* ================= PRODUCTS ROUTES ================= */
-
-// Get all products
 router.get("/", getProducts);
-
-// Get single product
 router.get("/:id", getProductById);
-
-// Create product with images
-router.post("/", upload.array("images", 5), createProduct);
-
-// Update product (replace images if provided)
-router.put("/:id", upload.array("images", 5), updateProduct);
-
-// Delete product
-router.delete("/:id", deleteProduct);
+router.post("/", protect, admin, upload.array("images", 5), createProduct);
+router.put("/:id", protect, admin, upload.array("images", 5), updateProduct);
+router.delete("/:id", protect, admin, deleteProduct);
 
 export default router;
-
