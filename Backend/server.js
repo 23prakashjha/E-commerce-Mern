@@ -26,7 +26,7 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:3000",
-  "https://e-commerce-mern-9snn.onrender.com",
+  "https://e-commerce-mern-1-0har.onrender.com",
 ];
 
 app.use(cors({
