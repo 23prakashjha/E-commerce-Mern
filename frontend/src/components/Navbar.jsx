@@ -1,7 +1,7 @@
 import { useState, useContext, useRef, useEffect } from "react";
 import {
   ShoppingCart, Home, Package, Shield, Menu,
-  LogOut, X, UserPlus, User, LayoutDashboard
+  LogOut, X, UserPlus, User, LayoutDashboard, Store
 } from "lucide-react";
 import { Link, NavLink } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
@@ -14,7 +14,7 @@ const Navbar = () => {
   const dropdownRef = useRef(null);
 
   const baseLink =
-    "flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-200";
+    "flex items-center gap-2.5 px-3 py-2.5 rounded-lg transition-all duration-200 text-sm font-medium";
 
   const navLinkClass = ({ isActive }) =>
     `${baseLink} ${
@@ -29,6 +29,11 @@ const Navbar = () => {
     setDropdownOpen(false);
   };
 
+  const closeMenus = () => {
+    setMenuOpen(false);
+    setDropdownOpen(false);
+  };
+
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -39,10 +44,23 @@ const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
+
+  const navItems = [
+    { to: "/", label: "Home", icon: Home },
+    { to: "/products", label: "Products", icon: Package },
+    { to: "/about", label: "About", icon: Store },
+    { to: "/contact", label: "Contact", icon: User },
+  ];
+
   return (
-    <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-md transition-all">
+    <nav className="bg-white/80 backdrop-blur-md sticky top-0 z-50 shadow-sm transition-all">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
+        {/* Logo */}
+        <Link to="/" className="flex items-center gap-2 shrink-0">
           <div className="bg-linear-to-r from-orange-500 to-orange-600 p-2 rounded-full shadow-lg">
             <Home className="w-5 h-5 text-white" />
           </div>
@@ -52,59 +70,56 @@ const Navbar = () => {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden md:flex items-center gap-2">
-          <NavLink to="/" className={navLinkClass}>Home</NavLink>
-          <NavLink to="/products" className={navLinkClass}>Products</NavLink>
-          <NavLink to="/about" className={navLinkClass}>About</NavLink>
-          <NavLink to="/contact" className={navLinkClass}>Contact</NavLink>
-          {user?.isAdmin && (
-            <NavLink to="/admin" className={navLinkClass}>
-              <LayoutDashboard size={16} /> Admin
+        <div className="hidden md:flex items-center gap-1">
+          {navItems.map(({ to, label, icon: Icon }) => (
+            <NavLink key={to} to={to} className={navLinkClass} end={to === "/"}>
+              <Icon size={16} /> {label}
             </NavLink>
-          )}
+          ))}
         </div>
 
         {/* Desktop Right */}
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden md:flex items-center gap-3">
           <NavLink to="/cart"
-            className="flex items-center gap-2 text-gray-700 hover:text-orange-600 transition px-3 py-2 rounded-lg">
+            className="flex items-center gap-2 text-gray-700 hover:text-orange-600 transition px-3 py-2 rounded-lg text-sm font-medium">
             <ShoppingCart size={18} /> Cart
           </NavLink>
 
           {!user ? (
             <NavLink to="/register"
-              className="flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition shadow-md">
+              className="flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition shadow-md text-sm font-semibold">
               <UserPlus size={18} /> Sign Up
             </NavLink>
           ) : (
             <div className="relative" ref={dropdownRef}>
               <button onClick={() => setDropdownOpen((prev) => !prev)}
-                className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg transition shadow-sm font-medium">
+                className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg transition shadow-sm text-sm font-medium">
                 <User size={18} /> {user.name}
               </button>
               <AnimatePresence>
                 {dropdownOpen && (
                   <motion.div
-                    initial={{ opacity: 0, y: -10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-lg z-50 overflow-hidden"
+                    initial={{ opacity: 0, y: -8, scale: 0.96 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -8, scale: 0.96 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl z-50 overflow-hidden border border-gray-100"
                   >
                     <Link to="/profile"
-                      className="block px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition font-medium"
+                      className="flex items-center gap-2.5 px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition text-sm font-medium"
                       onClick={() => setDropdownOpen(false)}>
-                      Profile
+                      <User size={16} /> Profile
                     </Link>
                     {user.isAdmin && (
                       <Link to="/admin"
-                        className="block px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition font-medium"
+                        className="flex items-center gap-2.5 px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition text-sm font-medium"
                         onClick={() => setDropdownOpen(false)}>
-                        <LayoutDashboard size={16} className="inline mr-2" />Dashboard
+                        <LayoutDashboard size={16} /> Dashboard
                       </Link>
                     )}
                     <button onClick={handleLogout}
-                      className="w-full text-left px-4 py-3 text-red-500 hover:bg-red-50 hover:text-red-600 transition font-medium">
-                      Logout
+                      className="w-full flex items-center gap-2.5 px-4 py-3 text-red-500 hover:bg-red-50 hover:text-red-600 transition text-sm font-medium border-t border-gray-50">
+                      <LogOut size={16} /> Logout
                     </button>
                   </motion.div>
                 )}
@@ -113,10 +128,10 @@ const Navbar = () => {
           )}
         </div>
 
-        {/* Mobile Button */}
-        <button className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition z-50"
-          onClick={() => setMenuOpen(!menuOpen)}>
-          {menuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+        {/* Mobile Menu Button */}
+        <button className="md:hidden p-2.5 rounded-lg hover:bg-gray-100 transition z-50"
+          onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+          {menuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
       </div>
 
@@ -125,42 +140,91 @@ const Navbar = () => {
         {menuOpen && (
           <>
             <motion.div
-              initial={{ y: -100, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -100, opacity: 0 }}
-              transition={{ duration: 0.3 }}
-              className="md:hidden fixed top-16 left-0 w-full bg-white shadow-lg z-50"
+              initial={{ x: "100%" }}
+              animate={{ x: 0 }}
+              exit={{ x: "100%" }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="md:hidden fixed top-0 right-0 h-full w-72 bg-white shadow-2xl z-40 flex flex-col"
             >
-              <div className="flex flex-col px-4 py-6 gap-2">
-                <NavLink to="/" className={navLinkClass} onClick={() => setMenuOpen(false)}>Home</NavLink>
-                <NavLink to="/products" className={navLinkClass} onClick={() => setMenuOpen(false)}>Products</NavLink>
-                <NavLink to="/about" className={navLinkClass} onClick={() => setMenuOpen(false)}>About</NavLink>
-                <NavLink to="/contact" className={navLinkClass} onClick={() => setMenuOpen(false)}>Contact</NavLink>
-                {user?.isAdmin && (
-                  <NavLink to="/admin" className={navLinkClass} onClick={() => setMenuOpen(false)}>
-                    <LayoutDashboard size={16} /> Admin
+              <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
+                <span className="font-bold text-gray-800">Menu</span>
+                <button onClick={() => setMenuOpen(false)} className="p-1.5 rounded-lg hover:bg-gray-100 transition">
+                  <X size={20} />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+                {navItems.map(({ to, label, icon: Icon }) => (
+                  <NavLink
+                    key={to}
+                    to={to}
+                    end={to === "/"}
+                    onClick={closeMenus}
+                    className={({ isActive }) =>
+                      `flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm font-medium ${
+                        isActive
+                          ? "bg-orange-100 text-orange-600 font-semibold"
+                          : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
+                      }`
+                    }
+                  >
+                    <Icon size={18} /> {label}
                   </NavLink>
-                )}
-                <hr className="border-gray-200 my-2" />
-                <NavLink to="/cart" className={navLinkClass} onClick={() => setMenuOpen(false)}>
+                ))}
+
+                <hr className="border-gray-100 my-3" />
+
+                <NavLink to="/cart" onClick={closeMenus}
+                  className={({ isActive }) =>
+                    `flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm font-medium ${
+                      isActive
+                        ? "bg-orange-100 text-orange-600 font-semibold"
+                        : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
+                    }`
+                  }>
                   <ShoppingCart size={18} /> Cart
                 </NavLink>
+
                 {!user ? (
-                  <NavLink to="/register"
-                    className="flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition"
-                    onClick={() => setMenuOpen(false)}>
-                    <UserPlus size={18} /> Sign Up
-                  </NavLink>
+                  <>
+                    <NavLink to="/register" onClick={closeMenus}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold text-sm mt-2">
+                      <UserPlus size={18} /> Sign Up / Login
+                    </NavLink>
+                  </>
                 ) : (
-                  <button onClick={handleLogout}
-                    className="flex items-center gap-2 bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 transition mt-2">
-                    <LogOut size={18} /> Logout
-                  </button>
+                  <>
+                    <NavLink to="/profile" onClick={closeMenus}
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-600">
+                      <User size={18} /> Profile
+                    </NavLink>
+                    {user.isAdmin && (
+                      <NavLink to="/admin" onClick={closeMenus}
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm font-medium text-orange-600 hover:bg-orange-50">
+                        <LayoutDashboard size={18} /> Dashboard
+                      </NavLink>
+                    )}
+                    <button onClick={handleLogout}
+                      className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 transition text-sm font-medium mt-2">
+                      <LogOut size={18} /> Logout
+                    </button>
+                  </>
                 )}
               </div>
+
+              <div className="px-5 py-4 border-t border-gray-100 text-xs text-gray-400 text-center">
+                ShopEase &copy; {new Date().getFullYear()}
+              </div>
             </motion.div>
-            <motion.div initial={{ opacity: 0 }} animate={{ opacity: 0.3 }} exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black z-40" onClick={() => setMenuOpen(false)} />
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.4 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="md:hidden fixed inset-0 bg-black z-30"
+              onClick={() => setMenuOpen(false)}
+            />
           </>
         )}
       </AnimatePresence>

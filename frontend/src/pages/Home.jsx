@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState, useRef, useCallback } from "react";
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
 import FestiveBanner from "../components/FestiveBanner";
@@ -36,8 +36,9 @@ import janmashtami from "../assets/janmashtami.jpg";
 import hero from "../assets/hero.jpg";
 import {
   Star, Truck, RefreshCcw, Headphones, ShieldCheck, ArrowUp,
-  ChevronDown, ChevronRight, ShoppingBag, TrendingUp, Sparkles,
+  ChevronDown, ChevronRight, ChevronLeft, ShoppingBag, TrendingUp, Sparkles,
   Award, Tag, Heart, Package, Instagram, Facebook, Twitter, Youtube,
+  Zap, Clock, Shield,
 } from "lucide-react";
 
 /* ================= DATA ================= */
@@ -129,6 +130,13 @@ const socialPosts = [
   { gradient: "from-red-500 to-pink-600", icon: Instagram },
 ];
 
+const blogGradients = [
+  "from-blue-400 to-purple-500",
+  "from-emerald-400 to-teal-500",
+  "from-orange-400 to-red-500",
+  "from-pink-400 to-rose-500",
+];
+
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.6 } }),
@@ -142,21 +150,101 @@ const StarRating = ({ rating }) => (
   </div>
 );
 
+const CountUp = ({ value, suffix = "" }) => {
+  const [count, setCount] = useState(0);
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true });
+
+  useEffect(() => {
+    if (!inView) return;
+    const duration = 1500;
+    const steps = 30;
+    const increment = parseInt(value) / steps;
+    let current = 0;
+    const timer = setInterval(() => {
+      current += increment;
+      if (current >= parseInt(value)) {
+        setCount(parseInt(value));
+        clearInterval(timer);
+      } else {
+        setCount(Math.floor(current));
+      }
+    }, duration / steps);
+    return () => clearInterval(timer);
+  }, [inView, value]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+};
+
+const ProductSkeleton = () => (
+  <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+    {[1, 2, 3, 4].map((i) => (
+      <div key={i} className="bg-white rounded-2xl shadow-sm overflow-hidden animate-pulse">
+        <div className="aspect-[4/5] bg-gray-200" />
+        <div className="p-4 space-y-3">
+          <div className="h-4 bg-gray-200 rounded w-3/4" />
+          <div className="h-4 bg-gray-200 rounded w-1/2" />
+        </div>
+      </div>
+    ))}
+  </div>
+);
+
+const AnnouncementBar = () => {
+  const [idx, setIdx] = useState(0);
+  const announcements = [
+    "Free Shipping on orders over ₹500!",
+    "Use code WELCOME10 for 10% off your first order",
+    "Flash Sale: Extra 20% off — Today Only!",
+  ];
+
+  useEffect(() => {
+    const id = setInterval(() => setIdx((p) => (p + 1) % announcements.length), 4000);
+    return () => clearInterval(id);
+  }, [announcements.length]);
+
+  return (
+    <div className="bg-gray-900 text-white text-sm py-2.5 overflow-hidden relative">
+      <div className="max-w-7xl mx-auto px-4 flex items-center justify-center">
+        <Zap size={14} className="text-orange-400 mr-2 shrink-0" />
+        <motion.p
+          key={idx}
+          initial={{ y: 16, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: -16, opacity: 0 }}
+          transition={{ duration: 0.35 }}
+          className="text-center font-medium"
+        >
+          {announcements[idx]}
+        </motion.p>
+      </div>
+      <div className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex gap-3 text-xs text-gray-400">
+        <span className="hover:text-white cursor-pointer transition">Help</span>
+        <span className="hover:text-white cursor-pointer transition">Track Order</span>
+        <span className="hover:text-white cursor-pointer transition">USD ↓</span>
+      </div>
+      <div className="absolute left-1/2 -translate-x-1/2 bottom-1 flex gap-1.5">
+        {announcements.map((_, i) => (
+          <span key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === idx ? "bg-orange-400" : "bg-gray-600"}`} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 /* ================= COMPONENT ================= */
 const Home = () => {
   const [products, setProducts] = useState([]);
-  const [announceIdx, setAnnounceIdx] = useState(0);
+  const [productsLoading, setProductsLoading] = useState(true);
   const [openFaq, setOpenFaq] = useState(null);
   const [showBackTop, setShowBackTop] = useState(false);
   const scrollRef = useRef(null);
 
   useEffect(() => {
-    api.get("/products").then((res) => setProducts(res.data)).catch(console.error);
-  }, []);
-
-  useEffect(() => {
-    const id = setInterval(() => setAnnounceIdx((p) => (p + 1) % 3), 4000);
-    return () => clearInterval(id);
+    api.get("/products")
+      .then((res) => setProducts(res.data))
+      .catch(console.error)
+      .finally(() => setProductsLoading(false));
   }, []);
 
   useEffect(() => {
@@ -166,6 +254,12 @@ const Home = () => {
   }, []);
 
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
+  const scrollTrending = (dir) => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollBy({ left: dir * 300, behavior: "smooth" });
+    }
+  };
 
   const latestCollection = useMemo(
     () => [...products].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 8),
@@ -179,35 +273,19 @@ const Home = () => {
 
   const trendingProducts = useMemo(() => products.slice(0, 10), [products]);
 
-  const announcements = [
-    "Free Shipping on orders over ₹500!",
-    "Use code WELCOME10 for 10% off your first order",
-    "Flash Sale: Extra 20% off — Today Only!",
+  const heroDecor = [
+    { icon: Truck, label: "Free Shipping", color: "bg-green-500" },
+    { icon: Shield, label: "Secure", color: "bg-blue-500" },
+    { icon: Clock, label: "24/7 Support", color: "bg-purple-500" },
   ];
 
   return (
     <div className="max-w-full mx-auto overflow-x-hidden">
       {/* ===== SECTION 1: ANNOUNCEMENT BAR ===== */}
-      <div className="bg-gray-900 text-white text-sm py-2.5 overflow-hidden relative">
-        <motion.p
-          key={announceIdx}
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: -20, opacity: 0 }}
-          transition={{ duration: 0.4 }}
-          className="text-center font-medium tracking-wide"
-        >
-          {announcements[announceIdx]}
-        </motion.p>
-        <div className="absolute right-4 top-1/2 -translate-y-1/2 hidden sm:flex gap-3 text-xs text-gray-400">
-          <span className="hover:text-white cursor-pointer">Help</span>
-          <span className="hover:text-white cursor-pointer">Track Order</span>
-          <span className="hover:text-white cursor-pointer">USD ↓</span>
-        </div>
-      </div>
+      <AnnouncementBar />
 
       {/* ===== SECTION 2: HERO ===== */}
-      <section className="relative min-h-screen flex items-center overflow-hidden rounded-none sm:rounded-3xl sm:mx-2 lg:mx-8">
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden rounded-none sm:rounded-3xl sm:mx-2 lg:mx-8">
         <motion.img
           src={hero}
           alt="Fashion Background"
@@ -216,9 +294,24 @@ const Home = () => {
           transition={{ duration: 8, ease: "easeOut" }}
           className="absolute inset-0 w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-linear-to-r from-black/80 via-black/50 to-transparent" />
-        <div className="relative z-10 max-w-7xl mx-auto px-6 py-28 w-full">
-          <div className="grid lg:grid-cols-2 gap-20 items-center">
+        <div className="absolute inset-0 bg-linear-to-r from-black/85 via-black/60 to-transparent" />
+
+        {/* Floating decorative elements */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 0.15, y: 0 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="absolute top-20 right-20 w-64 h-64 rounded-full bg-orange-500 blur-[120px] hidden lg:block"
+        />
+        <motion.div
+          initial={{ opacity: 0, y: -40 }}
+          animate={{ opacity: 0.1, y: 0 }}
+          transition={{ delay: 0.8, duration: 1 }}
+          className="absolute bottom-20 left-20 w-48 h-48 rounded-full bg-white blur-[100px] hidden lg:block"
+        />
+
+        <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 w-full">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={{ opacity: 1, y: 0 }}
@@ -229,10 +322,11 @@ const Home = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="inline-block mb-6 px-5 py-2 text-sm font-semibold tracking-wide rounded-full bg-orange-500/15 text-orange-400 border border-orange-400/30"
+                className="inline-flex items-center gap-2 mb-6 px-5 py-2 text-sm font-semibold tracking-wide rounded-full bg-orange-500/15 text-orange-400 border border-orange-400/30"
               >
-                New 2026 Collection
+                <Sparkles size={14} /> New 2026 Collection
               </motion.span>
+
               <h1 className="text-4xl sm:text-5xl xl:text-7xl font-extrabold leading-tight mb-6 text-white">
                 Fashion That{" "}
                 <span className="bg-linear-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent drop-shadow-lg">
@@ -240,23 +334,44 @@ const Home = () => {
                 </span>{" "}
                 With You
               </h1>
-              <p className="text-white/80 mb-12 text-base sm:text-lg max-w-xl mx-auto lg:mx-0">
+
+              <p className="text-white/80 mb-10 text-base sm:text-lg max-w-xl mx-auto lg:mx-0 leading-relaxed">
                 Bold silhouettes, premium comfort, and timeless confidence —
                 crafted for modern lifestyles and everyday movement.
               </p>
-              <div className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start">
+
+              <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Link
                   to="/products"
-                  className="inline-flex items-center justify-center gap-2 bg-orange-500 text-black px-10 py-4 rounded-2xl font-bold shadow-2xl hover:bg-orange-600 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-orange-400/50 transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-2 bg-orange-500 text-white px-10 py-4 rounded-2xl font-bold shadow-2xl hover:bg-orange-600 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-orange-400/50 transition-all duration-300 text-base"
                 >
                   <ShoppingBag size={20} /> Shop Collection
                 </Link>
                 <Link
                   to="/about"
-                  className="inline-flex items-center justify-center border border-white/40 text-white px-10 py-4 rounded-2xl font-semibold hover:bg-white hover:text-black transition-all duration-300"
+                  className="inline-flex items-center justify-center gap-2 border border-white/30 text-white px-10 py-4 rounded-2xl font-semibold hover:bg-white hover:text-gray-900 transition-all duration-300 backdrop-blur-sm text-base"
                 >
-                  Learn More
+                  Learn More <ChevronRight size={18} />
                 </Link>
+              </div>
+
+              {/* Floating badges */}
+              <div className="flex flex-wrap gap-3 mt-10 justify-center lg:justify-start">
+                {heroDecor.map((item, i) => {
+                  const Icon = item.icon;
+                  return (
+                    <motion.div
+                      key={item.label}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: 0.6 + i * 0.15 }}
+                      className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full text-white/90 text-xs sm:text-sm border border-white/10"
+                    >
+                      <Icon size={14} className="text-orange-400" />
+                      {item.label}
+                    </motion.div>
+                  );
+                })}
               </div>
             </motion.div>
 
@@ -266,24 +381,45 @@ const Home = () => {
               transition={{ duration: 1, delay: 0.2 }}
               className="hidden lg:block"
             >
-              <div className="relative bg-white/10 backdrop-blur-2xl rounded-3xl p-12 shadow-[0_20px_80px_rgba(0,0,0,0.45)] border border-white/20">
+              <div className="relative bg-white/10 backdrop-blur-2xl rounded-3xl p-10 shadow-[0_20px_80px_rgba(0,0,0,0.45)] border border-white/20">
+                <div className="absolute -top-4 -right-4 bg-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+                  NEW
+                </div>
                 <Sparkles className="text-yellow-400 w-8 h-8 mb-4" />
-                <h3 className="text-3xl font-bold mb-4 text-white">New Season Drop</h3>
-                <p className="text-white/70 mb-8 text-lg">Designed for motion. Styled for impact.</p>
+                <h3 className="text-3xl font-bold mb-3 text-white">New Season Drop</h3>
+                <p className="text-white/70 mb-6 text-lg">Designed for motion. Styled for impact.</p>
                 <div className="flex items-center justify-between">
-                  <span className="text-orange-400 font-bold text-xl">From ₹999</span>
-                  <Link to="/products" className="text-white font-semibold hover:text-orange-400 transition flex items-center gap-1">
-                    Explore <ChevronRight size={16} />
+                  <div>
+                    <span className="text-orange-400 font-bold text-2xl">From ₹999</span>
+                    <p className="text-white/50 text-xs mt-1">Limited stock available</p>
+                  </div>
+                  <Link to="/products" className="text-white font-semibold hover:text-orange-400 transition flex items-center gap-1 text-lg">
+                    Explore <ChevronRight size={18} />
                   </Link>
                 </div>
               </div>
+
+              {/* Stats card */}
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.8, duration: 0.6 }}
+                className="mt-6 bg-white/10 backdrop-blur-2xl rounded-2xl p-5 border border-white/20 flex items-center justify-around"
+              >
+                {[{ value: "500+", label: "Products" }, { value: "10K+", label: "Customers" }, { value: "4.9", label: "Rating" }].map((s) => (
+                  <div key={s.label} className="text-center">
+                    <p className="text-white font-bold text-lg">{s.value}</p>
+                    <p className="text-white/60 text-xs">{s.label}</p>
+                  </div>
+                ))}
+              </motion.div>
             </motion.div>
           </div>
         </div>
       </section>
 
       {/* ===== SECTION 3: TRUST BADGES ===== */}
-      <section className="py-12 -mt-20 relative z-20 max-w-6xl mx-auto px-4">
+      <section className="py-10 -mt-10 relative z-20 max-w-6xl mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           {[
             { icon: ShoppingBag, label: "Products", value: "500+" },
@@ -296,13 +432,13 @@ const Home = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 + i * 0.1 }}
-              className="bg-white rounded-2xl shadow-xl p-5 flex items-center gap-4 hover:shadow-2xl transition"
+              className="bg-white rounded-2xl shadow-lg p-5 flex items-center gap-4 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-gray-50"
             >
-              <div className="bg-orange-100 p-3 rounded-xl">
+              <div className="bg-orange-100 p-3 rounded-xl shrink-0">
                 <s.icon className="text-orange-500 w-6 h-6" />
               </div>
               <div>
-                <p className="text-2xl font-extrabold text-gray-800">{s.value}</p>
+                <p className="text-2xl font-extrabold text-gray-800"><CountUp value={s.value.replace(/[^0-9]/g, "")} suffix={s.value.includes("K") ? "K+" : s.value.includes("★") ? "★" : "+"} /></p>
                 <p className="text-gray-500 text-sm">{s.label}</p>
               </div>
             </motion.div>
@@ -315,7 +451,7 @@ const Home = () => {
         <SectionHeading subtitle="Shop by category to find exactly what you need">
           Explore Categories
         </SectionHeading>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-7xl mx-auto">
           {categories.map((cat, i) => (
             <motion.div
               key={cat.name}
@@ -326,19 +462,21 @@ const Home = () => {
             >
               <Link
                 to={`/category/${cat.name.toLowerCase()}`}
-                className="group relative block overflow-hidden rounded-3xl shadow-xl"
+                className="group relative block overflow-hidden rounded-3xl shadow-lg hover:shadow-2xl transition-shadow"
               >
                 <img
                   src={cat.image}
                   alt={cat.name}
                   className="h-80 w-full object-cover group-hover:scale-110 transition duration-700"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                <div className="absolute inset-0 bg-orange-500/0 group-hover:bg-orange-500/20 transition-colors duration-500" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h3 className="text-white text-3xl font-bold tracking-wide">{cat.name}</h3>
-                  <p className="text-white/70 text-sm mt-1 opacity-0 group-hover:opacity-100 transition">
-                    Shop Now →
-                  </p>
+                  <div className="flex items-center gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
+                    <span className="text-orange-400 text-sm font-semibold">Shop Now</span>
+                    <ChevronRight size={16} className="text-orange-400" />
+                  </div>
                 </div>
               </Link>
             </motion.div>
@@ -352,11 +490,11 @@ const Home = () => {
       </div>
 
       {/* ===== SECTION 6: WHY SHOP WITH US ===== */}
-      <section className="mb-16 bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
+      <section className="mb-16 bg-gradient-to-br from-gray-50 to-gray-100 py-16 px-4 sm:px-6 lg:px-8">
         <SectionHeading subtitle="We go above and beyond to make your shopping experience exceptional">
           Why Shop With Us
         </SectionHeading>
-        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-10 max-w-6xl mx-auto">
+        <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl mx-auto">
           {services.map((s, i) => (
             <motion.div
               key={s.title}
@@ -364,13 +502,13 @@ const Home = () => {
               initial="hidden"
               whileInView="visible"
               custom={i}
-              className="bg-white p-8 rounded-3xl shadow-lg flex flex-col items-center text-center hover:scale-105 hover:shadow-xl transition-all"
+              className="bg-white p-8 rounded-3xl shadow-lg flex flex-col items-center text-center hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 border border-gray-50"
             >
-              <div className="bg-orange-100 p-4 rounded-2xl mb-4">
-                <img src={s.icon} alt={s.title} className="h-10 w-10" />
+              <div className="bg-orange-100 p-4 rounded-2xl mb-4 group-hover:bg-orange-500 transition">
+                <img src={s.icon} alt={s.title} className="h-12 w-12" />
               </div>
               <h3 className="text-xl font-bold mb-2">{s.title}</h3>
-              <p className="text-gray-600">{s.desc}</p>
+              <p className="text-gray-600 leading-relaxed">{s.desc}</p>
             </motion.div>
           ))}
         </div>
@@ -378,88 +516,112 @@ const Home = () => {
 
       {/* ===== SECTION 7: TRENDING NOW ===== */}
       <section className="mb-16 px-4 sm:px-6 lg:px-8">
-        <SectionHeading subtitle="The most popular styles right now">
-          <TrendingUp className="inline w-8 h-8 text-orange-500 -mt-1" /> Trending Now
-        </SectionHeading>
-        <div
-          ref={scrollRef}
-          className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin max-w-7xl mx-auto"
-          style={{ scrollbarWidth: "thin" }}
-        >
-          {trendingProducts.map((p, i) => (
-            <motion.div
-              key={p._id}
-              initial={{ opacity: 0, x: 30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.05 }}
-              className="min-w-[260px] snap-start"
-            >
-              <ProductCard product={p} />
-            </motion.div>
-          ))}
-        </div>
-        <div className="text-center mt-8">
-          <Link
-            to="/products"
-            className="inline-flex items-center gap-2 border-2 border-orange-500 text-orange-500 px-8 py-3 rounded-2xl font-bold hover:bg-orange-500 hover:text-white transition"
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-between mb-8">
+            <SectionHeading subtitle="The most popular styles right now">
+              <TrendingUp className="inline w-7 h-7 text-orange-500 -mt-1" /> Trending Now
+            </SectionHeading>
+            <div className="hidden sm:flex gap-2">
+              <button onClick={() => scrollTrending(-1)} className="p-2.5 rounded-full border border-gray-200 hover:bg-orange-50 hover:border-orange-300 transition" aria-label="Scroll left">
+                <ChevronLeft size={18} className="text-gray-600" />
+              </button>
+              <button onClick={() => scrollTrending(1)} className="p-2.5 rounded-full border border-gray-200 hover:bg-orange-50 hover:border-orange-300 transition" aria-label="Scroll right">
+                <ChevronRight size={18} className="text-gray-600" />
+              </button>
+            </div>
+          </div>
+          <div
+            ref={scrollRef}
+            className="flex gap-6 overflow-x-auto pb-4 snap-x snap-mandatory scrollbar-thin"
+            style={{ scrollbarWidth: "thin" }}
           >
-            View All Products <ChevronRight size={18} />
-          </Link>
+            {productsLoading ? (
+              Array.from({ length: 5 }).map((_, i) => (
+                <div key={i} className="min-w-[260px] animate-pulse">
+                  <div className="bg-white rounded-2xl overflow-hidden">
+                    <div className="aspect-[4/5] bg-gray-200" />
+                    <div className="p-4 space-y-2">
+                      <div className="h-4 bg-gray-200 rounded w-3/4" />
+                      <div className="h-4 bg-gray-200 rounded w-1/3" />
+                    </div>
+                  </div>
+                </div>
+              ))
+            ) : (
+              trendingProducts.map((p, i) => (
+                <motion.div
+                  key={p._id}
+                  initial={{ opacity: 0, x: 30 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.05 }}
+                  className="min-w-[260px] snap-start"
+                >
+                  <ProductCard product={p} />
+                </motion.div>
+              ))
+            )}
+          </div>
+          <div className="text-center mt-8">
+            <Link
+              to="/products"
+              className="inline-flex items-center gap-2 border-2 border-orange-500 text-orange-500 px-8 py-3 rounded-2xl font-bold hover:bg-orange-500 hover:text-white transition-all duration-300"
+            >
+              View All Products <ChevronRight size={18} />
+            </Link>
+          </div>
         </div>
       </section>
 
-      {/* ===== SECTION 8: FESTIVE BANNER — HOLI ===== */}
+      {/* ===== SECTION 8-12: FESTIVE BANNERS + PRODUCT SECTIONS ===== */}
       <div className="px-4 sm:px-6 lg:px-8">
         <FestiveBanner {...festiveBanners[0]} />
       </div>
 
-      {/* ===== SECTION 9: NEW ARRIVALS ===== */}
       <section className="mb-16 px-4 sm:px-6 lg:px-8">
         <SectionHeading subtitle="Check out our freshest drops">
           <Sparkles className="inline w-7 h-7 text-orange-500 -mt-1" /> New Arrivals
         </SectionHeading>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-          {latestCollection.length
-            ? latestCollection.map((p) => <ProductCard key={p._id} product={p} />)
-            : <p className="text-center text-gray-500 col-span-full">No products found.</p>}
-        </div>
+        {productsLoading ? (
+          <ProductSkeleton />
+        ) : latestCollection.length ? (
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+            {latestCollection.map((p) => <ProductCard key={p._id} product={p} />)}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500 col-span-full py-12">No products found.</p>
+        )}
         <div className="text-center mt-10">
-          <Link
-            to="/products"
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-10 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl transition"
-          >
+          <Link to="/products" className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-10 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300">
             Discover More
           </Link>
         </div>
       </section>
 
-      {/* ===== SECTION 10: FLASH SALE ===== */}
       <div className="px-4 sm:px-6 lg:px-8">
         <FlashSaleBanner />
       </div>
 
-      {/* ===== SECTION 11: BEST SELLERS ===== */}
       <section className="mb-16 px-4 sm:px-6 lg:px-8">
         <SectionHeading subtitle="Our most popular products loved by customers">
           <Award className="inline w-7 h-7 text-orange-500 -mt-1" /> Best Sellers
         </SectionHeading>
-        <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
-          {bestSellers.length
-            ? bestSellers.map((p) => <ProductCard key={p._id} product={p} />)
-            : <p className="text-center text-gray-500 col-span-full">No products found.</p>}
-        </div>
+        {productsLoading ? (
+          <ProductSkeleton />
+        ) : bestSellers.length ? (
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+            {bestSellers.map((p) => <ProductCard key={p._id} product={p} />)}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500 col-span-full py-12">No products found.</p>
+        )}
         <div className="text-center mt-10">
-          <Link
-            to="/products"
-            className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-10 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl transition"
-          >
+          <Link to="/products" className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-10 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300">
             View Best Sellers
           </Link>
         </div>
       </section>
 
-      {/* ===== SECTION 12: FESTIVE BANNER — JANMASHTAMI ===== */}
       <div className="px-4 sm:px-6 lg:px-8">
         <FestiveBanner {...festiveBanners[1]} />
       </div>
@@ -470,11 +632,11 @@ const Home = () => {
           Our Brands
         </SectionHeading>
         <div className="relative max-w-7xl mx-auto">
-          <div className="flex gap-12 animate-scroll" style={{ animation: "scrollBrands 30s linear infinite" }}>
+          <div className="flex gap-8" style={{ animation: "scrollBrands 30s linear infinite" }}>
             {[...brands, ...brands].map((brand, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 px-8 py-4 bg-gray-50 rounded-2xl border border-gray-100 hover:border-orange-200 hover:shadow-lg transition"
+                className="flex-shrink-0 px-8 py-4 bg-white rounded-2xl border border-gray-100 hover:border-orange-200 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
               >
                 <span className="text-xl font-extrabold text-gray-400 hover:text-orange-500 transition tracking-widest uppercase">
                   {brand}
@@ -507,7 +669,7 @@ const Home = () => {
               className="bg-white p-8 rounded-3xl shadow-lg hover:shadow-xl transition-shadow border border-gray-50"
             >
               <StarRating rating={t.rating} />
-              <p className="text-gray-700 mt-4 mb-6 leading-relaxed">"{t.text}"</p>
+              <p className="text-gray-700 mt-4 mb-6 leading-relaxed italic">"{t.text}"</p>
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-sm">
                   {t.name.split(" ").map((n) => n[0]).join("")}
@@ -519,7 +681,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ===== SECTION 15: FESTIVE BANNER — RAKSHA BANDHAN ===== */}
       <div className="px-4 sm:px-6 lg:px-8">
         <FestiveBanner {...festiveBanners[2]} />
       </div>
@@ -539,24 +700,28 @@ const Home = () => {
               custom={i}
               className="group cursor-pointer"
             >
-              <div className="bg-gradient-to-br from-orange-100 to-orange-50 h-48 rounded-3xl mb-4 flex items-center justify-center overflow-hidden">
-                <div className="text-6xl opacity-30 group-hover:scale-110 transition">📰</div>
+              <div className={`bg-gradient-to-br ${blogGradients[i]} h-48 rounded-3xl mb-4 flex items-center justify-center overflow-hidden relative`}>
+                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
+                <div className="text-5xl font-bold text-white/30 group-hover:scale-110 transition-transform duration-500 select-none">
+                  {post.tag[0]}
+                </div>
               </div>
               <span className="text-xs font-semibold text-orange-500 uppercase tracking-wider">{post.tag}</span>
-              <h3 className="font-bold text-lg mt-1 group-hover:text-orange-500 transition">{post.title}</h3>
-              <p className="text-gray-500 text-sm mt-2 line-clamp-2">{post.excerpt}</p>
-              <p className="text-gray-400 text-xs mt-3">{post.date}</p>
+              <h3 className="font-bold text-lg mt-1 group-hover:text-orange-500 transition-colors">{post.title}</h3>
+              <p className="text-gray-500 text-sm mt-2 line-clamp-2 leading-relaxed">{post.excerpt}</p>
+              <p className="text-gray-400 text-xs mt-3 flex items-center gap-1">
+                <Clock size={12} /> {post.date}
+              </p>
             </motion.div>
           ))}
         </div>
         <div className="text-center mt-10">
-          <button className="border-2 border-orange-500 text-orange-500 px-8 py-3 rounded-2xl font-bold hover:bg-orange-500 hover:text-white transition">
+          <button className="border-2 border-orange-500 text-orange-500 px-8 py-3 rounded-2xl font-bold hover:bg-orange-500 hover:text-white transition-all duration-300">
             View All Articles
           </button>
         </div>
       </section>
 
-      {/* ===== SECTION 17: FESTIVE BANNER — NAVRATRI ===== */}
       <div className="px-4 sm:px-6 lg:px-8">
         <FestiveBanner {...festiveBanners[3]} />
       </div>
@@ -576,14 +741,14 @@ const Home = () => {
                 initial="hidden"
                 whileInView="visible"
                 custom={i}
-                className="flex items-start gap-5 p-6 rounded-2xl hover:bg-orange-50 transition group"
+                className="flex items-start gap-5 p-6 rounded-2xl hover:bg-orange-50 transition-all duration-300 group border border-transparent hover:border-orange-100"
               >
-                <div className="bg-orange-100 p-3 rounded-xl group-hover:bg-orange-500 transition">
-                  <Icon className="w-6 h-6 text-orange-500 group-hover:text-white transition" />
+                <div className="bg-orange-100 p-3 rounded-xl group-hover:bg-orange-500 transition-colors shrink-0">
+                  <Icon className="w-6 h-6 text-orange-500 group-hover:text-white transition-colors" />
                 </div>
                 <div>
                   <h3 className="font-bold text-lg">{f.title}</h3>
-                  <p className="text-gray-500">{f.desc}</p>
+                  <p className="text-gray-500 text-sm mt-1">{f.desc}</p>
                 </div>
               </motion.div>
             );
@@ -591,7 +756,6 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ===== SECTION 19: FESTIVE BANNER — DIWALI ===== */}
       <div className="px-4 sm:px-6 lg:px-8">
         <FestiveBanner {...festiveBanners[4]} />
       </div>
@@ -601,7 +765,7 @@ const Home = () => {
         <SectionHeading subtitle="Got questions? We've got answers.">
           Frequently Asked Questions
         </SectionHeading>
-        <div className="space-y-4">
+        <div className="space-y-3">
           {faqs.map((faq, i) => (
             <motion.div
               key={faq.q}
@@ -609,31 +773,37 @@ const Home = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
-              className="border border-gray-200 rounded-2xl overflow-hidden"
+              className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-orange-200 transition-colors"
             >
               <button
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                className="w-full flex items-center justify-between p-5 text-left font-semibold hover:bg-orange-50 transition"
+                className="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:bg-orange-50/50 transition-colors"
               >
-                <span>{faq.q}</span>
+                <span className="pr-4">{faq.q}</span>
                 <ChevronDown
                   size={18}
-                  className={`text-orange-500 transition-transform ${openFaq === i ? "rotate-180" : ""}`}
+                  className={`text-orange-500 transition-all duration-300 shrink-0 ${
+                    openFaq === i ? "rotate-180" : ""
+                  }`}
                 />
               </button>
               <motion.div
-                initial={{ height: 0 }}
-                animate={{ height: openFaq === i ? "auto" : 0 }}
+                initial={false}
+                animate={{
+                  height: openFaq === i ? "auto" : 0,
+                  opacity: openFaq === i ? 1 : 0,
+                }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="overflow-hidden"
               >
-                <p className="px-5 pb-5 text-gray-600 leading-relaxed">{faq.a}</p>
+                <p className="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 pt-4">{faq.a}</p>
               </motion.div>
             </motion.div>
           ))}
         </div>
       </section>
 
-      {/* ===== SECTION 21: INSTAGRAM / SOCIAL FEED ===== */}
+      {/* ===== SECTION 21: SOCIAL FEED ===== */}
       <section className="mb-16 px-4 sm:px-6 lg:px-8">
         <SectionHeading subtitle="Tag us @shopease for a chance to be featured">
           <Instagram className="inline w-7 h-7 text-orange-500 -mt-1" /> Follow Us
@@ -649,10 +819,10 @@ const Home = () => {
                 initial="hidden"
                 whileInView="visible"
                 custom={i}
-                className={`bg-gradient-to-br ${post.gradient} aspect-square rounded-2xl flex items-center justify-center hover:scale-105 transition cursor-pointer relative group`}
+                className={`bg-gradient-to-br ${post.gradient} aspect-square rounded-2xl flex items-center justify-center hover:scale-105 hover:rotate-2 transition-all duration-300 cursor-pointer relative group shadow-lg`}
               >
-                <Icon className="w-8 h-8 text-white opacity-60 group-hover:opacity-100 transition" />
-                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-2xl transition" />
+                <Icon className="w-8 h-8 text-white opacity-70 group-hover:opacity-100 transition-all group-hover:scale-110" />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 rounded-2xl transition-colors" />
               </motion.a>
             );
           })}
@@ -662,7 +832,7 @@ const Home = () => {
             <a
               key={i}
               href="#"
-              className="p-3 bg-gray-100 rounded-full hover:bg-orange-500 hover:text-white transition shadow"
+              className="p-3 bg-gray-100 rounded-full hover:bg-orange-500 hover:text-white transition-all duration-300 shadow hover:shadow-lg hover:-translate-y-1"
             >
               <Icon size={20} />
             </a>
@@ -680,7 +850,7 @@ const Home = () => {
         <SectionHeading subtitle="Explore our seasonal and special collections">
           Featured Collections
         </SectionHeading>
-        <div className="grid md:grid-cols-2 gap-8 max-w-7xl mx-auto">
+        <div className="grid md:grid-cols-2 gap-6 max-w-7xl mx-auto">
           {featuredBanners.map((b, i) => (
             <motion.div
               key={b.title}
@@ -688,16 +858,17 @@ const Home = () => {
               initial="hidden"
               whileInView="visible"
               custom={i}
-              className="relative rounded-3xl overflow-hidden shadow-2xl group"
+              className="relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl group"
             >
-              <img src={b.image} alt={b.title} className="h-80 w-full object-cover group-hover:scale-105 transition duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <img src={b.image} alt={b.title} className="h-72 w-full object-cover group-hover:scale-105 transition duration-700" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
+              <div className="absolute inset-0 bg-orange-500/0 group-hover:bg-orange-500/10 transition-colors duration-500" />
               <div className="absolute bottom-0 left-0 right-0 p-8">
                 <h3 className="text-3xl font-extrabold text-white mb-1">{b.title}</h3>
                 <p className="text-white/70 mb-4">{b.subtitle}</p>
                 <Link
                   to={b.link}
-                  className="inline-flex items-center gap-1 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-xl font-semibold text-sm transition"
+                  className="inline-flex items-center gap-1 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 hover:gap-2"
                 >
                   Explore <ChevronRight size={16} />
                 </Link>
@@ -712,7 +883,7 @@ const Home = () => {
         onClick={scrollToTop}
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: showBackTop ? 1 : 0, scale: showBackTop ? 1 : 0 }}
-        className="fixed bottom-8 right-8 z-50 bg-orange-500 text-white p-4 rounded-full shadow-2xl hover:bg-orange-600 hover:scale-110 transition"
+        className="fixed bottom-8 right-8 z-50 bg-orange-500 text-white p-4 rounded-full shadow-2xl hover:bg-orange-600 hover:scale-110 transition-all duration-300 hover:shadow-orange-500/30"
       >
         <ArrowUp size={24} />
       </motion.button>
