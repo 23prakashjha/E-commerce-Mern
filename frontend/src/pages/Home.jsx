@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, useRef, useCallback } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { Link } from "react-router-dom";
 import ProductCard from "../components/ProductCard";
@@ -12,33 +12,12 @@ import men from "../assets/men.jpeg";
 import women from "../assets/women.jpeg";
 import children from "../assets/children.jpeg";
 import accessories from "../assets/Accessories.jpeg";
-import summer from "../assets/summer.jpeg";
-import winter from "../assets/winter.jpeg";
-import wedding from "../assets/wedding.jpeg";
-import Moonson from "../assets/Moonson.jpeg";
-import lengha from "../assets/lengha.jpg";
-import bridal from "../assets/bridal.jpeg";
-import Streetwaer from "../assets/Streetwaer.jpeg";
-import jacket from "../assets/jacket.jpeg";
-import shirt from "../assets/shirt.jpeg";
-import bags from "../assets/bags.jpeg";
-import childcollection from "../assets/childcollection.jpeg";
-import womcollection from "../assets/womcollection.jpeg";
-import Eassy from "../assets/Eassy.png";
-import Fastest from "../assets/Fastest.png";
-import preminum from "../assets/preminum.png";
-import support from "../assets/support.png";
-import Diwali from "../assets/Diwali.jpeg";
-import holi from "../assets/holi.jpeg";
-import NavRatri from "../assets/NavRatri.jpg";
-import RakshaBadhan from "../assets/RakshaBadhan.jpg";
-import janmashtami from "../assets/janmashtami.jpg";
 import hero from "../assets/hero.jpg";
 import {
   Star, Truck, RefreshCcw, Headphones, ShieldCheck, ArrowUp,
   ChevronDown, ChevronRight, ChevronLeft, ShoppingBag, TrendingUp, Sparkles,
   Award, Tag, Heart, Package, Instagram, Facebook, Twitter, Youtube,
-  Zap, Clock, Shield,
+  Zap, Clock, Shield, Flame, Gem, Sun, Gift,
 } from "lucide-react";
 
 /* ================= DATA ================= */
@@ -49,19 +28,19 @@ const categories = [
   { name: "Accessories", image: accessories },
 ];
 
-const featuredBanners = [
-  { title: "Winter Season", subtitle: "Fresh styles just dropped", image: winter, link: "/products" },
-  { title: "Summer Season", subtitle: "Built for everyday comfort", image: summer, link: "/products" },
-  { title: "Monsoon Season", subtitle: "Fresh styles just dropped", image: Moonson, link: "/products" },
-  { title: "Wedding Season", subtitle: "Built for everyday comfort", image: wedding, link: "/products" },
-  { title: "Bridal Dress", subtitle: "Fresh styles just dropped", image: bridal, link: "/products" },
-  { title: "Groom Dress", subtitle: "Built for everyday comfort", image: lengha, link: "/products" },
-  { title: "Trending Dress", subtitle: "Built for everyday comfort", image: Streetwaer, link: "/products" },
-  { title: "Women Bags", subtitle: "Built for everyday comfort", image: bags, link: "/products" },
-  { title: "Mens Latest Jackets", subtitle: "Built for everyday comfort", image: jacket, link: "/products" },
-  { title: "Men All Types of T-shirts", subtitle: "Built for everyday comfort", image: shirt, link: "/products" },
-  { title: "Children All Collection", subtitle: "Built for everyday comfort", image: childcollection, link: "/products" },
-  { title: "Women All Collection", subtitle: "Built for everyday comfort", image: womcollection, link: "/products" },
+const promoBanners = [
+  { title: "New Arrivals", subtitle: "Fresh styles, just landed", gradient: "from-blue-600 via-blue-500 to-cyan-400", icon: Sparkles },
+  { title: "Premium Collection", subtitle: "Elevate your everyday style", gradient: "from-purple-600 via-purple-500 to-pink-400", icon: Gem },
+  { title: "Best Sellers", subtitle: "Loved by thousands", gradient: "from-orange-500 via-red-500 to-pink-500", icon: Award },
+  { title: "Limited Edition", subtitle: "While stocks last", gradient: "from-rose-600 via-pink-500 to-fuchsia-400", icon: Zap },
+  { title: "Trending Now", subtitle: "What everyone's wearing", gradient: "from-teal-500 via-cyan-500 to-blue-400", icon: Flame },
+  { title: "Exclusive Deals", subtitle: "Up to 70% off", gradient: "from-amber-500 via-yellow-500 to-orange-400", icon: Tag },
+  { title: "Luxury Edit", subtitle: "Curated premium picks", gradient: "from-indigo-600 via-purple-600 to-violet-400", icon: Star },
+  { title: "Daily Essentials", subtitle: "Your wardrobe staples", gradient: "from-emerald-500 via-green-500 to-teal-400", icon: ShoppingBag },
+  { title: "Weekend Special", subtitle: "Limited time offers", gradient: "from-violet-500 via-fuchsia-500 to-pink-400", icon: Clock },
+  { title: "Top Rated", subtitle: "Customer favorites", gradient: "from-rose-500 via-pink-500 to-orange-400", icon: Heart },
+  { title: "Must Haves", subtitle: "Don't miss out", gradient: "from-sky-500 via-indigo-500 to-blue-400", icon: Sparkles },
+  { title: "Style Edit", subtitle: "Curated for you", gradient: "from-orange-400 via-pink-500 to-rose-400", icon: Package },
 ];
 
 const testimonials = [
@@ -77,18 +56,16 @@ const testimonials = [
 ];
 
 const services = [
-  { icon: support, title: "24/7 Support", desc: "We are always here to help you anytime, anywhere." },
-  { icon: Fastest, title: "Fastest Delivery", desc: "Get your products delivered in record time." },
-  { icon: Eassy, title: "Easy Returns", desc: "Hassle-free returns within 30 days." },
-  { icon: preminum, title: "Premium Quality", desc: "We ensure the best quality products for you." },
+  { icon: Headphones, title: "24/7 Support", desc: "We are always here to help you anytime, anywhere." },
+  { icon: Truck, title: "Fastest Delivery", desc: "Get your products delivered in record time." },
+  { icon: RefreshCcw, title: "Easy Returns", desc: "Hassle-free returns within 30 days." },
+  { icon: ShieldCheck, title: "Premium Quality", desc: "We ensure the best quality products for you." },
 ];
 
-const festiveBanners = [
-  { image: holi, alt: "Holi Fashion", title: "Celebrate Style", highlight: "This Holi", subtitle: "Vibrant colors, bold designs, and festive comfort — fashion that shines with every celebration." },
-  { image: janmashtami, alt: "Janmashtami Fashion", title: "Celebrate Style", highlight: "This Janmashtami", subtitle: "Vibrant colors, bold designs, and festive comfort — fashion that shines with every celebration." },
-  { image: RakshaBadhan, alt: "Raksha Bandhan Fashion", title: "Celebrate Style", highlight: "This Raksha Bandhan", subtitle: "Vibrant colors, bold designs, and festive comfort — fashion that shines with every celebration." },
-  { image: NavRatri, alt: "Navratri Fashion", title: "Celebrate Style", highlight: "This Navratri", subtitle: "Vibrant colors, bold designs, and festive comfort — fashion that shines with every celebration." },
-  { image: Diwali, alt: "Diwali Fashion", title: "Celebrate Style", highlight: "This Diwali", subtitle: "Vibrant colors, bold designs, and festive comfort — fashion that shines with every celebration." },
+const promoFullBanners = [
+  { title: "Mega Sale", highlight: "Up to 70% Off", subtitle: "Biggest sale of the season. Shop now before it ends!", gradient: "from-orange-600 via-red-500 to-pink-600", icon: Gift },
+  { title: "New Season", highlight: "Fresh Arrivals", subtitle: "Explore the latest trends — updated weekly.", gradient: "from-blue-600 via-purple-500 to-pink-500", icon: Sun },
+  { title: "Free Shipping", highlight: "On All Orders", subtitle: "No minimum. Limited time offer.", gradient: "from-teal-600 via-emerald-500 to-green-400", icon: Truck },
 ];
 
 const brands = [
@@ -504,8 +481,8 @@ const Home = () => {
               custom={i}
               className="bg-white p-8 rounded-3xl shadow-lg flex flex-col items-center text-center hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 border border-gray-50"
             >
-              <div className="bg-orange-100 p-4 rounded-2xl mb-4 group-hover:bg-orange-500 transition">
-                <img src={s.icon} alt={s.title} className="h-12 w-12" />
+              <div className="bg-orange-100 p-4 rounded-2xl mb-4 group-hover:bg-orange-500 transition-colors">
+                <s.icon className="w-12 h-12 text-orange-500 group-hover:text-white transition-colors" />
               </div>
               <h3 className="text-xl font-bold mb-2">{s.title}</h3>
               <p className="text-gray-600 leading-relaxed">{s.desc}</p>
@@ -573,9 +550,9 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ===== SECTION 8-12: FESTIVE BANNERS + PRODUCT SECTIONS ===== */}
+      {/* ===== PROMO BANNER 1 ===== */}
       <div className="px-4 sm:px-6 lg:px-8">
-        <FestiveBanner {...festiveBanners[0]} />
+        <FestiveBanner {...promoFullBanners[0]} />
       </div>
 
       <section className="mb-16 px-4 sm:px-6 lg:px-8">
@@ -621,10 +598,6 @@ const Home = () => {
           </Link>
         </div>
       </section>
-
-      <div className="px-4 sm:px-6 lg:px-8">
-        <FestiveBanner {...festiveBanners[1]} />
-      </div>
 
       {/* ===== SECTION 13: BRAND PARTNERS ===== */}
       <section className="mb-16 py-16 overflow-hidden">
@@ -681,10 +654,6 @@ const Home = () => {
         </div>
       </section>
 
-      <div className="px-4 sm:px-6 lg:px-8">
-        <FestiveBanner {...festiveBanners[2]} />
-      </div>
-
       {/* ===== SECTION 16: FASHION BLOG ===== */}
       <section className="mb-16 px-4 sm:px-6 lg:px-8">
         <SectionHeading subtitle="Style tips, trends, and stories from our team">
@@ -722,8 +691,9 @@ const Home = () => {
         </div>
       </section>
 
+      {/* ===== PROMO BANNER 2 ===== */}
       <div className="px-4 sm:px-6 lg:px-8">
-        <FestiveBanner {...festiveBanners[3]} />
+        <FestiveBanner {...promoFullBanners[1]} />
       </div>
 
       {/* ===== SECTION 18: FEATURES GRID ===== */}
@@ -755,10 +725,6 @@ const Home = () => {
           })}
         </div>
       </section>
-
-      <div className="px-4 sm:px-6 lg:px-8">
-        <FestiveBanner {...festiveBanners[4]} />
-      </div>
 
       {/* ===== SECTION 20: FAQ ===== */}
       <section className="mb-16 px-4 sm:px-6 lg:px-8 max-w-4xl mx-auto">
@@ -840,41 +806,53 @@ const Home = () => {
         </div>
       </section>
 
+      {/* ===== PROMO BANNER 3 ===== */}
+      <div className="px-4 sm:px-6 lg:px-8">
+        <FestiveBanner {...promoFullBanners[2]} />
+      </div>
+
       {/* ===== SECTION 22: NEWSLETTER ===== */}
       <div className="px-4 sm:px-6 lg:px-8">
         <Newsletter />
       </div>
 
-      {/* ===== SECTION 23: FEATURED BANNERS GRID ===== */}
+      {/* ===== SECTION 23: PROMO GRID ===== */}
       <section className="mb-16 px-4 sm:px-6 lg:px-8">
-        <SectionHeading subtitle="Explore our seasonal and special collections">
-          Featured Collections
+        <SectionHeading subtitle="Curated collections for every style">
+          <Sparkles className="inline w-7 h-7 text-orange-500 -mt-1" /> Shop by Collection
         </SectionHeading>
-        <div className="grid md:grid-cols-2 gap-6 max-w-7xl mx-auto">
-          {featuredBanners.map((b, i) => (
-            <motion.div
-              key={b.title}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              custom={i}
-              className="relative rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl group"
-            >
-              <img src={b.image} alt={b.title} className="h-72 w-full object-cover group-hover:scale-105 transition duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/30 to-transparent" />
-              <div className="absolute inset-0 bg-orange-500/0 group-hover:bg-orange-500/10 transition-colors duration-500" />
-              <div className="absolute bottom-0 left-0 right-0 p-8">
-                <h3 className="text-3xl font-extrabold text-white mb-1">{b.title}</h3>
-                <p className="text-white/70 mb-4">{b.subtitle}</p>
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+          {promoBanners.map((b, i) => {
+            const Icon = b.icon;
+            return (
+              <motion.div
+                key={b.title}
+                variants={fadeUp}
+                initial="hidden"
+                whileInView="visible"
+                custom={i}
+              >
                 <Link
-                  to={b.link}
-                  className="inline-flex items-center gap-1 bg-orange-500 hover:bg-orange-600 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition-all duration-300 hover:gap-2"
+                  to="/products"
+                  className={`group relative block rounded-3xl overflow-hidden shadow-lg hover:shadow-2xl transition-all bg-gradient-to-br ${b.gradient}`}
                 >
-                  Explore <ChevronRight size={16} />
+                  <div className="aspect-[4/3] p-8 flex flex-col justify-between relative">
+                    <div className="absolute inset-0 bg-black/10 group-hover:bg-black/20 transition-colors" />
+                    <div className="relative z-10 self-end">
+                      <Icon className="w-10 h-10 text-white/80 group-hover:scale-110 group-hover:rotate-6 transition-all duration-300" />
+                    </div>
+                    <div className="relative z-10">
+                      <h3 className="text-2xl font-extrabold text-white mb-1">{b.title}</h3>
+                      <p className="text-white/80 text-sm mb-3">{b.subtitle}</p>
+                      <span className="inline-flex items-center gap-1 text-white font-semibold text-sm opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
+                        Explore <ChevronRight size={14} />
+                      </span>
+                    </div>
+                  </div>
                 </Link>
-              </div>
-            </motion.div>
-          ))}
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 

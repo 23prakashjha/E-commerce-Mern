@@ -7,6 +7,10 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  // Let browser set Content-Type with boundary for FormData
+  if (config.data instanceof FormData) {
+    delete config.headers["Content-Type"];
+  }
   try {
     const raw = localStorage.getItem("user");
     if (raw) {
