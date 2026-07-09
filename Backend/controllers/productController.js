@@ -5,7 +5,7 @@ import path from "path";
 /* ================= GET ALL PRODUCTS ================= */
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find({ countInStock: { $gt: 0 } });
+    const products = await Product.find();
     res.json(products);
   } catch (err) {
     console.error(err);
