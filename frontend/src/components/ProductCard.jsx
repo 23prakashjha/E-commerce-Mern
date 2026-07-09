@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Star, ShoppingCart, Eye } from "lucide-react";
 import { getImageUrl } from "../services/api";
+import config from "../config";
 import { Link } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
@@ -16,7 +17,7 @@ const ProductCard = ({ product }) => {
           <img
             src={getImageUrl(product)}
             alt={product.name}
-            onError={(e) => { e.currentTarget.src = "/images/placeholder.jpg"; }}
+            onError={(e) => { e.currentTarget.src = config.FALLBACK_IMAGE; }}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
           />
         </div>

@@ -1,7 +1,8 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { api, getImageUrl } from "../services/api";
-import { Package, ArrowLeft, Star, ShoppingBag } from "lucide-react";
+import config from "../config";
+import { Package, ArrowLeft, Star, ShoppingBag, ImageOff } from "lucide-react";
 import { motion } from "framer-motion";
 
 const Skeleton = () => (
@@ -106,7 +107,7 @@ const CategoryProducts = () => {
                   <img
                     src={getImageUrl(p)}
                     alt={p.name}
-                    onError={(e) => { e.currentTarget.src = "/images/placeholder.jpg"; }}
+                    onError={(e) => { e.currentTarget.src = config.FALLBACK_IMAGE; }}
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                   />
                 </div>

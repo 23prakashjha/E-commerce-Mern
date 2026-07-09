@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { api, getImageUrl } from "../services/api";
+import config from "../config";
 import { Link } from "react-router-dom";
-import { Search, ChevronLeft, ChevronRight, SlidersHorizontal } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, SlidersHorizontal, ImageOff } from "lucide-react";
 import { motion } from "framer-motion";
 
 const PER_PAGE = 20;
@@ -164,11 +165,12 @@ const ProductsList = () => {
             {paginatedProducts.map((p) => (
               <Link to={`/products/${p._id}`} key={p._id} className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden group relative">
                 <div className="relative h-60 w-full overflow-hidden bg-gray-100">
-                  {p.images && p.images.length > 0 && (
+                  {p.images && p.images.length > 0 ? (
                     <>
                       <img
                         src={getImageUrl({ images: p.images, image: p.images[currentImage[p._id]] })}
                         alt={p.name}
+                        onError={(e) => { e.currentTarget.src = config.FALLBACK_IMAGE; }}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                       {p.images.length > 1 && (
@@ -187,11 +189,15 @@ const ProductsList = () => {
                         </>
                       )}
                     </>
+                  ) : (
+                    <div className="flex items-center justify-center h-full">
+                      <div className="text-center">
+                        <ImageOff size={32} className="mx-auto text-gray-300 mb-2" />
+                        <p className="text-xs text-gray-400">No image</p>
+                      </div>
+                    </div>
                   )}
                   <span className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">{p.category || "General"}</span>
-                  {p.countInStock <= 0 && (
-                    <span className="absolute top-3 right-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full">Out of Stock</span>
-                  )}
                 </div>
                 <div className="p-4">
                   <h2 className="font-semibold text-base truncate">{p.name}</h2>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { api, getImageUrl } from "../services/api";
+import config from "../config";
 import { Trash2, Plus, Minus, ShoppingCart, MapPin, CreditCard, Truck, ArrowLeft, Package, ShieldCheck, IndianRupee } from "lucide-react";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
@@ -205,7 +206,7 @@ const Cart = () => {
                     <img
                       src={getImageUrl(p)}
                       alt={p.name}
-                      onError={(e) => { e.currentTarget.src = "/images/placeholder.jpg"; }}
+                      onError={(e) => { e.currentTarget.src = config.FALLBACK_IMAGE; }}
                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
                     />
                   </Link>
