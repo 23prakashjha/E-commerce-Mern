@@ -21,6 +21,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (error.response?.status === 401 && !error.config?.url?.includes("/auth/")) {
+      localStorage.removeItem("user");
+      window.dispatchEvent(new CustomEvent("auth:logout"));
+    }
+    return Promise.reject(error);
+  }
+);
+
 export const getImageUrl = (product) => {
   let path = product?.image || product?.images?.[0];
   if (!path) return config.FALLBACK_IMAGE;

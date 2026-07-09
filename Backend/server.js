@@ -18,6 +18,14 @@ dotenv.config();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET === "your_jwt_secret_here" || process.env.JWT_SECRET.length < 16) {
+  console.warn("WARNING: JWT_SECRET is not set or is too weak. Generate a strong secret and set it in .env or environment variables.");
+  if (process.env.NODE_ENV === "production") {
+    console.error("FATAL: JWT_SECRET must be configured in production.");
+    process.exit(1);
+  }
+}
+
 connectDB();
 
 const app = express();

@@ -4,8 +4,11 @@ import { AuthContext } from "../context/AuthContext";
 
 const ProtectedRoute = ({ children }) => {
   const { user } = useContext(AuthContext);
-  if (!user || !user.isAdmin) {
-    return <Navigate to="/register" replace />;
+  if (!user) {
+    return <Navigate to="/admin/login" replace />;
+  }
+  if (!user.isAdmin) {
+    return <Navigate to="/" replace />;
   }
   return children;
 };
