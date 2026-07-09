@@ -54,9 +54,7 @@ const Products = () => {
       formData.append("description", newProduct.description);
       newProduct.images.forEach((img) => formData.append("images", img));
 
-      const res = await api.post("/products", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      const res = await api.post("/products", formData);
       setProducts((prev) => [...prev, res.data]);
       toast.success("Product added");
       newProduct.imagePreviews.forEach(URL.revokeObjectURL);
