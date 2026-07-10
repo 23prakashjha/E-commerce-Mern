@@ -10,7 +10,7 @@ const emptyProduct = {
   name: "", price: "", discountPrice: "", category: "Mens", description: "", countInStock: "", rating: "", numReviews: "", images: [], imagePreviews: [],
 };
 
-const categories = ["Mens", "Womens", "Children", "Accessories"];
+const categories = ["Mens", "Womens", "Children", "Accessories", "Custom"];
 
 const Products = () => {
   const { user } = useContext(AuthContext);
@@ -25,6 +25,8 @@ const Products = () => {
   const [editingProduct, setEditingProduct] = useState(null);
   const [editData, setEditData] = useState({});
   const [editPreviews, setEditPreviews] = useState([]);
+  const [newCustomCategory, setNewCustomCategory] = useState("");
+  const [editCustomCategory, setEditCustomCategory] = useState("");
 
   useEffect(() => {
     if (!user || !user.isAdmin) {
@@ -54,7 +56,7 @@ const Products = () => {
       formData.append("name", newProduct.name);
       formData.append("price", newProduct.price);
       formData.append("discountPrice", newProduct.discountPrice || 0);
-      formData.append("category", newProduct.category);
+      formData.append("category", newProduct.category === "Custom" ? newCustomCategory : newProduct.category);
       formData.append("description", newProduct.description);
       formData.append("countInStock", newProduct.countInStock || 0);
       formData.append("rating", newProduct.rating || 0);
@@ -66,6 +68,7 @@ const Products = () => {
       toast.success("Product added");
       newProduct.imagePreviews.forEach(URL.revokeObjectURL);
       setNewProduct(emptyProduct);
+      setNewCustomCategory("");
       setShowModal(false);
     } catch (err) {
       toast.error("Failed to add product");
@@ -85,16 +88,18 @@ const Products = () => {
 
   const openEdit = (p) => {
     setEditingProduct(p);
+    const isCustom = !categories.slice(0, -1).includes(p.category);
     setEditData({
       name: p.name,
       price: p.price,
       discountPrice: p.discountPrice || 0,
-      category: p.category,
+      category: isCustom ? "Custom" : p.category,
       description: p.description || "",
       countInStock: p.countInStock || 0,
       rating: p.rating || 0,
       numReviews: p.numReviews || 0,
     });
+    setEditCustomCategory(isCustom ? p.category : "");
     setEditPreviews([]);
   };
 
@@ -105,7 +110,7 @@ const Products = () => {
       formData.append("name", editData.name);
       formData.append("price", editData.price);
       formData.append("discountPrice", editData.discountPrice || 0);
-      formData.append("category", editData.category);
+      formData.append("category", editData.category === "Custom" ? editCustomCategory : editData.category);
       formData.append("description", editData.description);
       formData.append("countInStock", editData.countInStock || 0);
       formData.append("rating", editData.rating || 0);
@@ -122,6 +127,12 @@ const Products = () => {
       toast.error("Failed to update product");
     }
   };
+
+  const allCategories = useMemo(() => {
+    const fromProducts = [...new Set(products.map((p) => p.category).filter(Boolean))];
+    const defaults = ["Mens", "Womens", "Children", "Accessories"];
+    return [...new Set([...defaults, ...fromProducts])];
+  }, [products]);
 
   const filteredProducts = useMemo(() => {
     return products.filter((p) => {
@@ -165,7 +176,7 @@ const Products = () => {
         <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}
           className="border rounded-xl px-4 py-2.5 w-full sm:w-48 focus:ring-2 focus:ring-orange-400 outline-none">
           <option value="All">All</option>
-          {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+          {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
       </div>
 
@@ -226,7 +237,7 @@ const Products = () => {
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} exit={{ scale: 0.8 }}
               className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl relative overflow-y-auto max-h-[90vh]">
-              <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onClick={() => setShowModal(false)}>
+              <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onClick={() => { setShowModal(false); setNewCustomCategory(""); }}>
                 <X size={20} />
               </button>
               <h2 className="text-xl font-bold mb-4">Add New Product</h2>
@@ -262,10 +273,16 @@ const Products = () => {
                       value={newProduct.numReviews} onChange={(e) => setNewProduct({ ...newProduct, numReviews: e.target.value })} />
                   </div>
                 </div>
-                <select value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none">
-                  {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
+                <div>
+                  <select value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none">
+                    {categories.map((c) => <option key={c} value={c}>{c === "Custom" ? "Custom Category" : c}</option>)}
+                  </select>
+                  {newProduct.category === "Custom" && (
+                    <input type="text" placeholder="Enter custom category name" className="w-full p-3 mt-2 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={newCustomCategory} onChange={(e) => setNewCustomCategory(e.target.value)} required />
+                  )}
+                </div>
                 <textarea placeholder="Product description" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none resize-none"
                   value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} rows={4} />
                 <label className="flex flex-col items-center gap-2 cursor-pointer border border-dashed p-4 rounded-lg hover:bg-orange-50 transition">
@@ -288,7 +305,7 @@ const Products = () => {
                   </div>
                 )}
                 <div className="flex justify-end gap-4 pt-4">
-                  <button type="button" onClick={() => setShowModal(false)}
+                  <button type="button" onClick={() => { setShowModal(false); setNewCustomCategory(""); }}
                     className="px-4 py-2 rounded-lg border hover:bg-gray-50 transition">Cancel</button>
                   <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition">Add Product</button>
                 </div>
@@ -340,10 +357,16 @@ const Products = () => {
                       value={editData.numReviews || ""} onChange={(e) => setEditData({ ...editData, numReviews: e.target.value })} />
                   </div>
                 </div>
-                <select value={editData.category || ""} onChange={(e) => setEditData({ ...editData, category: e.target.value })}
-                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none">
-                  {categories.map((c) => <option key={c} value={c}>{c}</option>)}
-                </select>
+                <div>
+                  <select value={editData.category || ""} onChange={(e) => setEditData({ ...editData, category: e.target.value })}
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none">
+                    {categories.map((c) => <option key={c} value={c}>{c === "Custom" ? "Custom Category" : c}</option>)}
+                  </select>
+                  {editData.category === "Custom" && (
+                    <input type="text" placeholder="Enter custom category name" className="w-full p-3 mt-2 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={editCustomCategory} onChange={(e) => setEditCustomCategory(e.target.value)} required />
+                  )}
+                </div>
                 <textarea placeholder="Product description" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none resize-none"
                   value={editData.description || ""} onChange={(e) => setEditData({ ...editData, description: e.target.value })} rows={4} />
                 <label className="flex flex-col items-center gap-2 cursor-pointer border border-dashed p-4 rounded-lg hover:bg-orange-50 transition">

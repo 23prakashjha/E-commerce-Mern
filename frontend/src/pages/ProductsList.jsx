@@ -6,7 +6,6 @@ import { Search, ChevronLeft, ChevronRight, SlidersHorizontal, ImageOff, Star, B
 import { motion } from "framer-motion";
 
 const PER_PAGE = 20;
-const categories = ["All", "Mens", "Womens", "Children"];
 
 const ProductsList = () => {
   const [products, setProducts] = useState([]);
@@ -27,6 +26,11 @@ const ProductsList = () => {
     };
     fetchProducts();
   }, []);
+
+  const allCategories = useMemo(() => {
+    const fromProducts = [...new Set(products.map((p) => p.category).filter(Boolean))];
+    return ["All", ...fromProducts];
+  }, [products]);
 
   const filteredProducts = useMemo(() => {
     let data = [...products];
@@ -117,7 +121,7 @@ const ProductsList = () => {
             )}
           </div>
           <select value={category} onChange={(e) => handleCategory(e.target.value)} className="border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-400">
-            {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+            {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
           <select value={sort} onChange={(e) => handleSort(e.target.value)} className="border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-400">
             <option value="">Sort by</option>
