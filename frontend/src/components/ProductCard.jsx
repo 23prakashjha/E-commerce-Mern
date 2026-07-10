@@ -31,7 +31,7 @@ const ProductCard = ({ product }) => {
         )}
 
         <div className="absolute top-3 left-3 flex flex-col gap-2">
-          <span className="bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
+          <span className="bg-indigo-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow-md">
             {product.category || "General"}
           </span>
         </div>
@@ -44,13 +44,13 @@ const ProductCard = ({ product }) => {
       </Link>
 
       <Link to={`/products/${product._id}`} className="p-4 flex flex-col flex-1">
-        <h3 className="font-semibold text-sm sm:text-base truncate group-hover:text-orange-500 transition-colors">
+        <h3 className="font-semibold text-sm sm:text-base truncate group-hover:text-indigo-500 transition-colors">
           {product.name}
         </h3>
 
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-orange-500 font-bold text-lg">₹{product.discountPrice > 0 ? product.discountPrice : product.price}</span>
+            <span className="text-indigo-500 font-bold text-lg">₹{product.discountPrice > 0 ? product.discountPrice : product.price}</span>
             {product.discountPrice > 0 && (
               <span className="text-gray-400 text-xs line-through">₹{product.price}</span>
             )}
@@ -70,7 +70,7 @@ const ProductCard = ({ product }) => {
               Unavailable
             </span>
           ) : (
-            <span className="block w-full text-center text-sm text-orange-500 font-medium py-2 border border-orange-200 rounded-xl bg-orange-50/50 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
+            <span className="block w-full text-center text-sm text-indigo-500 font-medium py-2 border border-indigo-200 rounded-xl bg-indigo-50/50 group-hover:bg-indigo-500 group-hover:text-white transition-all duration-300">
               <ShoppingCart size={14} className="inline mr-1.5" /> View Details
             </span>
           )}

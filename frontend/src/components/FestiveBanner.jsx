@@ -30,17 +30,17 @@ const FestiveBanner = ({ image, gradient, alt, title, highlight, subtitle, link 
         transition={{ duration: 0.8, ease: "easeOut" }}
         className="max-w-xl text-white text-center flex flex-col items-center"
       >
-        {Icon && <Icon className="w-12 h-12 mb-4 text-orange-400" />}
+        {Icon && <Icon className="w-12 h-12 mb-4 text-indigo-400" />}
         <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold leading-tight mb-6">
           {title}
-          <span className="block bg-linear-to-r from-orange-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
+          <span className="block bg-linear-to-r from-indigo-400 to-pink-500 bg-clip-text text-transparent drop-shadow-lg">
             {highlight}
           </span>
         </h1>
         <p className="text-white/90 text-base sm:text-lg mb-10 max-w-md">{subtitle}</p>
         <Link
           to={link}
-          className="inline-flex items-center justify-center gap-3 bg-orange-500 hover:bg-orange-600 text-white px-12 py-4 rounded-2xl font-semibold shadow-2xl hover:scale-105 transition-all duration-300"
+          className="inline-flex items-center justify-center gap-3 bg-indigo-500 hover:bg-indigo-600 text-white px-12 py-4 rounded-2xl font-semibold shadow-2xl hover:scale-105 transition-all duration-300"
         >
           Shop Now
           <span className="text-xl">→</span>

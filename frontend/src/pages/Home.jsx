@@ -19,6 +19,48 @@ import {
   Zap, Clock, Shield, Flame, Gem, Sun, Gift,
 } from "lucide-react";
 
+/* ================= STAR FIELD ANIMATION ================= */
+const STAR_COLORS = ["text-yellow-300", "text-indigo-300", "text-pink-300", "text-cyan-300", "text-white"];
+const StarField = ({ count = 40 }) => {
+  const stars = useMemo(() =>
+    Array.from({ length: count }, (_, i) => ({
+      id: i,
+      x: Math.random() * 100,
+      y: Math.random() * 100,
+      size: Math.random() * 14 + 6,
+      duration: Math.random() * 4 + 3,
+      delay: Math.random() * 5,
+      color: STAR_COLORS[Math.floor(Math.random() * STAR_COLORS.length)],
+    })), [count]);
+
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {stars.map((s) => (
+        <motion.div
+          key={s.id}
+          initial={{ opacity: 0, scale: 0, rotate: 0 }}
+          animate={{
+            opacity: [0, 1, 0.4, 1, 0],
+            scale: [0, 1, 0.6, 1, 0],
+            rotate: [0, 180, 360],
+            y: [0, -15, 5, -10, 0],
+          }}
+          transition={{
+            duration: s.duration,
+            repeat: Infinity,
+            delay: s.delay,
+            ease: "easeInOut",
+          }}
+          className="absolute"
+          style={{ left: `${s.x}%`, top: `${s.y}%` }}
+        >
+          <Star size={s.size} className={`${s.color} fill-current drop-shadow-[0_0_6px_rgba(255,255,255,0.4)]`} />
+        </motion.div>
+      ))}
+    </div>
+  );
+};
+
 /* ================= DATA ================= */
 const categories = [
   { name: "Mens", image: men },
@@ -30,16 +72,16 @@ const categories = [
 const promoBanners = [
   { title: "New Arrivals", subtitle: "Fresh styles, just landed", gradient: "from-blue-600 via-blue-500 to-cyan-400", icon: Sparkles },
   { title: "Premium Collection", subtitle: "Elevate your everyday style", gradient: "from-purple-600 via-purple-500 to-pink-400", icon: Gem },
-  { title: "Best Sellers", subtitle: "Loved by thousands", gradient: "from-orange-500 via-red-500 to-pink-500", icon: Award },
+  { title: "Best Sellers", subtitle: "Loved by thousands", gradient: "from-indigo-500 via-red-500 to-pink-500", icon: Award },
   { title: "Limited Edition", subtitle: "While stocks last", gradient: "from-rose-600 via-pink-500 to-fuchsia-400", icon: Zap },
   { title: "Trending Now", subtitle: "What everyone's wearing", gradient: "from-teal-500 via-cyan-500 to-blue-400", icon: Flame },
-  { title: "Exclusive Deals", subtitle: "Up to 70% off", gradient: "from-amber-500 via-yellow-500 to-orange-400", icon: Tag },
+  { title: "Exclusive Deals", subtitle: "Up to 70% off", gradient: "from-amber-500 via-yellow-500 to-indigo-400", icon: Tag },
   { title: "Luxury Edit", subtitle: "Curated premium picks", gradient: "from-indigo-600 via-purple-600 to-violet-400", icon: Star },
   { title: "Daily Essentials", subtitle: "Your wardrobe staples", gradient: "from-emerald-500 via-green-500 to-teal-400", icon: ShoppingBag },
   { title: "Weekend Special", subtitle: "Limited time offers", gradient: "from-violet-500 via-fuchsia-500 to-pink-400", icon: Clock },
-  { title: "Top Rated", subtitle: "Customer favorites", gradient: "from-rose-500 via-pink-500 to-orange-400", icon: Heart },
+  { title: "Top Rated", subtitle: "Customer favorites", gradient: "from-rose-500 via-pink-500 to-indigo-400", icon: Heart },
   { title: "Must Haves", subtitle: "Don't miss out", gradient: "from-sky-500 via-indigo-500 to-blue-400", icon: Sparkles },
-  { title: "Style Edit", subtitle: "Curated for you", gradient: "from-orange-400 via-pink-500 to-rose-400", icon: Package },
+  { title: "Style Edit", subtitle: "Curated for you", gradient: "from-indigo-400 via-pink-500 to-rose-400", icon: Package },
 ];
 
 const testimonials = [
@@ -62,7 +104,7 @@ const services = [
 ];
 
 const promoFullBanners = [
-  { title: "Mega Sale", highlight: "Up to 70% Off", subtitle: "Biggest sale of the season. Shop now before it ends!", gradient: "from-orange-600 via-red-500 to-pink-600", icon: Gift },
+  { title: "Mega Sale", highlight: "Up to 70% Off", subtitle: "Biggest sale of the season. Shop now before it ends!", gradient: "from-indigo-600 via-red-500 to-pink-600", icon: Gift },
   { title: "New Season", highlight: "Fresh Arrivals", subtitle: "Explore the latest trends — updated weekly.", gradient: "from-blue-600 via-purple-500 to-pink-500", icon: Sun },
   { title: "Free Shipping", highlight: "On All Orders", subtitle: "No minimum. Limited time offer.", gradient: "from-teal-600 via-emerald-500 to-green-400", icon: Truck },
 ];
@@ -100,7 +142,7 @@ const featuresGrid = [
 const socialPosts = [
   { gradient: "from-pink-500 to-rose-500", icon: Instagram, label: "Latest Drop", likes: "2.4K" },
   { gradient: "from-purple-500 to-indigo-500", icon: Instagram, label: "Behind the Scenes", likes: "1.8K" },
-  { gradient: "from-yellow-400 to-orange-500", icon: Instagram, label: "Customer Style", likes: "3.1K" },
+  { gradient: "from-yellow-400 to-indigo-500", icon: Instagram, label: "Customer Style", likes: "3.1K" },
   { gradient: "from-green-400 to-teal-500", icon: Instagram, label: "Sustainable Line", likes: "956" },
   { gradient: "from-blue-500 to-cyan-500", icon: Instagram, label: "Summer Vibes", likes: "4.2K" },
   { gradient: "from-red-500 to-pink-600", icon: Instagram, label: "Flash Sale", likes: "5.7K" },
@@ -109,7 +151,7 @@ const socialPosts = [
 const blogGradients = [
   "from-blue-400 to-purple-500",
   "from-emerald-400 to-teal-500",
-  "from-orange-400 to-red-500",
+  "from-indigo-400 to-red-500",
   "from-pink-400 to-rose-500",
 ];
 
@@ -182,7 +224,7 @@ const AnnouncementBar = () => {
   return (
     <div className="bg-gray-900 text-white text-sm py-2.5 overflow-hidden relative">
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-center">
-        <Zap size={14} className="text-orange-400 mr-2 shrink-0" />
+        <Zap size={14} className="text-indigo-400 mr-2 shrink-0" />
         <motion.p
           key={idx}
           initial={{ y: 16, opacity: 0 }}
@@ -201,7 +243,7 @@ const AnnouncementBar = () => {
       </div>
       <div className="absolute left-1/2 -translate-x-1/2 bottom-1 flex gap-1.5">
         {announcements.map((_, i) => (
-          <span key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === idx ? "bg-orange-400" : "bg-gray-600"}`} />
+          <span key={i} className={`w-1.5 h-1.5 rounded-full transition-colors ${i === idx ? "bg-indigo-400" : "bg-gray-600"}`} />
         ))}
       </div>
     </div>
@@ -261,32 +303,33 @@ const Home = () => {
       <AnnouncementBar />
 
       {/* ===== SECTION 2: HERO ===== */}
-      <section className="relative min-h-[90vh] flex items-center overflow-hidden rounded-none sm:rounded-3xl sm:mx-2 lg:mx-8 bg-gradient-to-br from-gray-950 via-gray-900 to-orange-950">
+      <section className="relative min-h-[90vh] flex items-center overflow-hidden rounded-none sm:rounded-3xl sm:mx-2 lg:mx-8 bg-gradient-to-br from-gray-950 via-gray-900 to-indigo-950">
+        <StarField count={50} />
         {/* Animated background shapes */}
         <motion.div
           animate={{ rotate: 360 }}
           transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-          className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full border border-orange-500/10 hidden lg:block"
+          className="absolute -top-32 -right-32 w-[500px] h-[500px] rounded-full border border-indigo-500/10 hidden lg:block"
         />
         <motion.div
           animate={{ rotate: -360 }}
           transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-          className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full border border-orange-500/10 hidden lg:block"
+          className="absolute -bottom-40 -left-40 w-[600px] h-[600px] rounded-full border border-indigo-500/10 hidden lg:block"
         />
         <motion.div
           animate={{ scale: [1, 1.2, 1] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-1/4 right-1/4 w-72 h-72 rounded-full bg-orange-500/10 blur-[100px] hidden lg:block"
+          className="absolute top-1/4 right-1/4 w-72 h-72 rounded-full bg-indigo-500/10 blur-[100px] hidden lg:block"
         />
         <motion.div
           animate={{ scale: [1, 1.3, 1] }}
           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 2 }}
-          className="absolute bottom-1/4 left-1/3 w-96 h-96 rounded-full bg-orange-600/8 blur-[120px] hidden lg:block"
+          className="absolute bottom-1/4 left-1/3 w-96 h-96 rounded-full bg-indigo-600/8 blur-[120px] hidden lg:block"
         />
         <motion.div
           animate={{ y: [-10, 10, -10] }}
           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-          className="absolute top-20 left-[15%] w-3 h-3 rounded-full bg-orange-400/60 hidden lg:block"
+          className="absolute top-20 left-[15%] w-3 h-3 rounded-full bg-indigo-400/60 hidden lg:block"
         />
         <motion.div
           animate={{ y: [10, -10, 10] }}
@@ -296,7 +339,7 @@ const Home = () => {
         <motion.div
           animate={{ y: [-8, 8, -8] }}
           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-          className="absolute bottom-32 left-[30%] w-2.5 h-2.5 rounded-full bg-orange-300/40 hidden lg:block"
+          className="absolute bottom-32 left-[30%] w-2.5 h-2.5 rounded-full bg-indigo-300/40 hidden lg:block"
         />
 
         <div className="relative z-10 max-w-7xl mx-auto px-6 py-20 w-full">
@@ -311,14 +354,14 @@ const Home = () => {
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.2 }}
-                className="inline-flex items-center gap-2 mb-6 px-5 py-2 text-sm font-semibold tracking-wide rounded-full bg-orange-500/15 text-orange-400 border border-orange-400/30"
+                className="inline-flex items-center gap-2 mb-6 px-5 py-2 text-sm font-semibold tracking-wide rounded-full bg-indigo-500/15 text-indigo-400 border border-indigo-400/30"
               >
                 <Sparkles size={14} /> New 2026 Collection
               </motion.span>
 
               <h1 className="text-4xl sm:text-5xl xl:text-7xl font-extrabold leading-tight mb-6 text-white">
                 Fashion That{" "}
-                <span className="bg-linear-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-indigo-400 to-indigo-600 bg-clip-text text-transparent">
                   Moves
                 </span>{" "}
                 With You
@@ -332,7 +375,7 @@ const Home = () => {
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <Link
                   to="/products"
-                  className="inline-flex items-center justify-center gap-2 bg-orange-500 text-white px-10 py-4 rounded-2xl font-bold shadow-2xl hover:bg-orange-600 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-orange-400/50 transition-all duration-300 text-base"
+                  className="inline-flex items-center justify-center gap-2 bg-indigo-500 text-white px-10 py-4 rounded-2xl font-bold shadow-2xl hover:bg-indigo-600 hover:scale-105 focus:outline-none focus:ring-4 focus:ring-indigo-400/50 transition-all duration-300 text-base"
                 >
                   <ShoppingBag size={20} /> Shop Collection
                 </Link>
@@ -356,7 +399,7 @@ const Home = () => {
                       transition={{ delay: 0.6 + i * 0.15 }}
                       className="flex items-center gap-2 bg-white/5 backdrop-blur-sm px-4 py-2 rounded-full text-white/80 text-xs sm:text-sm border border-white/10"
                     >
-                      <Icon size={14} className="text-orange-400" />
+                      <Icon size={14} className="text-indigo-400" />
                       {item.label}
                     </motion.div>
                   );
@@ -371,7 +414,7 @@ const Home = () => {
               className="hidden lg:block"
             >
               <div className="relative bg-white/5 backdrop-blur-2xl rounded-3xl p-10 shadow-[0_20px_80px_rgba(0,0,0,0.5)] border border-white/10">
-                <div className="absolute -top-4 -right-4 bg-orange-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
+                <div className="absolute -top-4 -right-4 bg-indigo-500 text-white text-xs font-bold px-4 py-1.5 rounded-full shadow-lg">
                   NEW
                 </div>
                 <Sparkles className="text-yellow-400 w-8 h-8 mb-4" />
@@ -379,10 +422,10 @@ const Home = () => {
                 <p className="text-white/60 mb-6 text-lg">Designed for motion. Styled for impact.</p>
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-orange-400 font-bold text-2xl">From ₹999</span>
+                    <span className="text-indigo-400 font-bold text-2xl">From ₹999</span>
                     <p className="text-white/40 text-xs mt-1">Limited stock available</p>
                   </div>
-                  <Link to="/products" className="text-white font-semibold hover:text-orange-400 transition flex items-center gap-1 text-lg">
+                  <Link to="/products" className="text-white font-semibold hover:text-indigo-400 transition flex items-center gap-1 text-lg">
                     Explore <ChevronRight size={18} />
                   </Link>
                 </div>
@@ -423,8 +466,8 @@ const Home = () => {
               transition={{ delay: 0.4 + i * 0.1 }}
               className="bg-white rounded-2xl shadow-lg p-5 flex items-center gap-4 hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border border-gray-50"
             >
-              <div className="bg-orange-100 p-3 rounded-xl shrink-0">
-                <s.icon className="text-orange-500 w-6 h-6" />
+              <div className="bg-indigo-100 p-3 rounded-xl shrink-0">
+                <s.icon className="text-indigo-500 w-6 h-6" />
               </div>
               <div>
                 <p className="text-2xl font-extrabold text-gray-800"><CountUp value={s.value.replace(/[^0-9]/g, "")} suffix={s.value.includes("K") ? "K+" : s.value.includes("★") ? "★" : "+"} /></p>
@@ -459,12 +502,12 @@ const Home = () => {
                   className="h-80 w-full object-cover group-hover:scale-110 transition duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                <div className="absolute inset-0 bg-orange-500/0 group-hover:bg-orange-500/20 transition-colors duration-500" />
+                <div className="absolute inset-0 bg-indigo-500/0 group-hover:bg-indigo-500/20 transition-colors duration-500" />
                 <div className="absolute bottom-0 left-0 right-0 p-6">
                   <h3 className="text-white text-3xl font-bold tracking-wide">{cat.name}</h3>
                   <div className="flex items-center gap-2 mt-2 opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:translate-y-0">
-                    <span className="text-orange-400 text-sm font-semibold">Shop Now</span>
-                    <ChevronRight size={16} className="text-orange-400" />
+                    <span className="text-indigo-400 text-sm font-semibold">Shop Now</span>
+                    <ChevronRight size={16} className="text-indigo-400" />
                   </div>
                 </div>
               </Link>
@@ -479,7 +522,8 @@ const Home = () => {
       </div>
 
       {/* ===== SECTION 6: WHY SHOP WITH US ===== */}
-      <section className="mb-16 bg-gradient-to-br from-gray-50 to-gray-100 py-16 px-4 sm:px-6 lg:px-8">
+      <section className="mb-16 bg-gradient-to-br from-gray-50 to-gray-100 py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+        <StarField count={12} />
         <SectionHeading subtitle="We go above and beyond to make your shopping experience exceptional">
           Why Shop With Us
         </SectionHeading>
@@ -493,8 +537,8 @@ const Home = () => {
               custom={i}
               className="group bg-white p-8 rounded-3xl shadow-lg flex flex-col items-center text-center hover:scale-[1.03] hover:shadow-2xl transition-all duration-300 border border-gray-50"
             >
-              <div className="bg-orange-100 p-4 rounded-2xl mb-4 group-hover:bg-orange-500 transition-colors">
-                <s.icon className="w-12 h-12 text-orange-500 group-hover:text-white transition-colors" />
+              <div className="bg-indigo-100 p-4 rounded-2xl mb-4 group-hover:bg-indigo-500 transition-colors">
+                <s.icon className="w-12 h-12 text-indigo-500 group-hover:text-white transition-colors" />
               </div>
               <h3 className="text-xl font-bold mb-2">{s.title}</h3>
               <p className="text-gray-600 leading-relaxed">{s.desc}</p>
@@ -508,13 +552,13 @@ const Home = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center justify-between mb-8">
             <SectionHeading subtitle="The most popular styles right now">
-              <TrendingUp className="inline w-7 h-7 text-orange-500 -mt-1" /> Trending Now
+              <TrendingUp className="inline w-7 h-7 text-indigo-500 -mt-1" /> Trending Now
             </SectionHeading>
             <div className="hidden sm:flex gap-2">
-              <button onClick={() => scrollTrending(-1)} className="p-2.5 rounded-full border border-gray-200 hover:bg-orange-50 hover:border-orange-300 transition" aria-label="Scroll left">
+              <button onClick={() => scrollTrending(-1)} className="p-2.5 rounded-full border border-gray-200 hover:bg-indigo-50 hover:border-indigo-300 transition" aria-label="Scroll left">
                 <ChevronLeft size={18} className="text-gray-600" />
               </button>
-              <button onClick={() => scrollTrending(1)} className="p-2.5 rounded-full border border-gray-200 hover:bg-orange-50 hover:border-orange-300 transition" aria-label="Scroll right">
+              <button onClick={() => scrollTrending(1)} className="p-2.5 rounded-full border border-gray-200 hover:bg-indigo-50 hover:border-indigo-300 transition" aria-label="Scroll right">
                 <ChevronRight size={18} className="text-gray-600" />
               </button>
             </div>
@@ -554,7 +598,7 @@ const Home = () => {
           <div className="text-center mt-8">
             <Link
               to="/products"
-              className="inline-flex items-center gap-2 border-2 border-orange-500 text-orange-500 px-8 py-3 rounded-2xl font-bold hover:bg-orange-500 hover:text-white transition-all duration-300"
+              className="inline-flex items-center gap-2 border-2 border-indigo-500 text-indigo-500 px-8 py-3 rounded-2xl font-bold hover:bg-indigo-500 hover:text-white transition-all duration-300"
             >
               View All Products <ChevronRight size={18} />
             </Link>
@@ -569,7 +613,7 @@ const Home = () => {
 
       <section className="mb-16 px-4 sm:px-6 lg:px-8">
         <SectionHeading subtitle="Check out our freshest drops">
-          <Sparkles className="inline w-7 h-7 text-orange-500 -mt-1" /> New Arrivals
+          <Sparkles className="inline w-7 h-7 text-indigo-500 -mt-1" /> New Arrivals
         </SectionHeading>
         {productsLoading ? (
           <ProductSkeleton />
@@ -581,7 +625,7 @@ const Home = () => {
           <p className="text-center text-gray-500 col-span-full py-12">No products found.</p>
         )}
         <div className="text-center mt-10">
-          <Link to="/products" className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-10 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300">
+          <Link to="/products" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white px-10 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300">
             Discover More
           </Link>
         </div>
@@ -593,7 +637,7 @@ const Home = () => {
 
       <section className="mb-16 px-4 sm:px-6 lg:px-8">
         <SectionHeading subtitle="Our most popular products loved by customers">
-          <Award className="inline w-7 h-7 text-orange-500 -mt-1" /> Best Sellers
+          <Award className="inline w-7 h-7 text-indigo-500 -mt-1" /> Best Sellers
         </SectionHeading>
         {productsLoading ? (
           <ProductSkeleton />
@@ -605,7 +649,7 @@ const Home = () => {
           <p className="text-center text-gray-500 col-span-full py-12">No products found.</p>
         )}
         <div className="text-center mt-10">
-          <Link to="/products" className="inline-block bg-orange-500 hover:bg-orange-600 text-white px-10 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300">
+          <Link to="/products" className="inline-block bg-indigo-500 hover:bg-indigo-600 text-white px-10 py-3 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all duration-300">
             View Best Sellers
           </Link>
         </div>
@@ -625,9 +669,9 @@ const Home = () => {
             {[...brands, ...brands].map((brand, i) => (
               <div
                 key={i}
-                className="flex-shrink-0 px-7 py-3 bg-white rounded-xl border border-gray-100 hover:border-orange-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
+                className="flex-shrink-0 px-7 py-3 bg-white rounded-xl border border-gray-100 hover:border-indigo-200 hover:shadow-lg hover:-translate-y-1 transition-all duration-300"
               >
-                <span className="text-sm font-extrabold text-gray-400 hover:text-orange-500 transition tracking-widest uppercase">
+                <span className="text-sm font-extrabold text-gray-400 hover:text-indigo-500 transition tracking-widest uppercase">
                   {brand}
                 </span>
               </div>
@@ -643,7 +687,8 @@ const Home = () => {
       </section>
 
       {/* ===== SECTION 14: TESTIMONIALS ===== */}
-      <section className="mb-16 bg-gradient-to-br from-orange-50 to-white py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
+      <section className="mb-16 bg-gradient-to-br from-indigo-50 to-white py-20 px-4 sm:px-6 lg:px-8 overflow-hidden relative">
+        <StarField count={15} />
         <SectionHeading subtitle="Hear from our happy customers">
           What Our Customers Say
         </SectionHeading>
@@ -658,7 +703,7 @@ const Home = () => {
                 <StarRating rating={t.rating} />
                 <p className="text-gray-700 mt-3 mb-4 leading-relaxed italic text-sm">"{t.text}"</p>
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-xs shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-indigo-500 flex items-center justify-center text-white font-bold text-xs shrink-0">
                     {t.name.split(" ").map((n) => n[0]).join("")}
                   </div>
                   <p className="font-bold text-gray-800 text-sm">{t.name}</p>
@@ -668,7 +713,7 @@ const Home = () => {
           </div>
           <div className="flex justify-center gap-1.5 mt-4">
             {testimonials.slice(0, 5).map((_, i) => (
-              <span key={i} className="w-2 h-2 rounded-full bg-orange-300" />
+              <span key={i} className="w-2 h-2 rounded-full bg-indigo-300" />
             ))}
           </div>
         </div>
@@ -686,7 +731,7 @@ const Home = () => {
               <StarRating rating={t.rating} />
               <p className="text-gray-700 mt-3 mb-5 leading-relaxed italic text-sm">"{t.text}"</p>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
+                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-400 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shrink-0">
                   {t.name.split(" ").map((n) => n[0]).join("")}
                 </div>
                 <p className="font-bold text-gray-800">{t.name}</p>
@@ -723,18 +768,18 @@ const Home = () => {
                     </span>
                   </div>
                   <div className="absolute bottom-4 right-4 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                    <span className="bg-white text-orange-500 text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-1">
+                    <span className="bg-white text-indigo-500 text-xs font-bold px-4 py-2 rounded-full shadow-lg flex items-center gap-1">
                       Read More <ChevronRight size={12} />
                     </span>
                   </div>
                 </div>
                 <div className="p-5">
-                  <h3 className="font-bold text-base group-hover:text-orange-500 transition-colors leading-snug line-clamp-2">{post.title}</h3>
+                  <h3 className="font-bold text-base group-hover:text-indigo-500 transition-colors leading-snug line-clamp-2">{post.title}</h3>
                   <p className="text-gray-500 text-sm mt-2 line-clamp-2 leading-relaxed">{post.excerpt}</p>
                   <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
                     <div className="flex items-center gap-2">
-                      <div className="w-6 h-6 rounded-full bg-orange-100 flex items-center justify-center">
-                        <span className="text-orange-500 text-xs font-bold">{post.author[0]}</span>
+                      <div className="w-6 h-6 rounded-full bg-indigo-100 flex items-center justify-center">
+                        <span className="text-indigo-500 text-xs font-bold">{post.author[0]}</span>
                       </div>
                       <span className="text-gray-400 text-xs">{post.author}</span>
                     </div>
@@ -748,7 +793,7 @@ const Home = () => {
           ))}
         </div>
         <div className="text-center mt-10">
-          <button className="border-2 border-orange-500 text-orange-500 px-8 py-3 rounded-2xl font-bold hover:bg-orange-500 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/20">
+          <button className="border-2 border-indigo-500 text-indigo-500 px-8 py-3 rounded-2xl font-bold hover:bg-indigo-500 hover:text-white transition-all duration-300 hover:shadow-lg hover:shadow-indigo-500/20">
             View All Articles
           </button>
         </div>
@@ -760,7 +805,7 @@ const Home = () => {
       </div>
 
       {/* ===== SECTION 18: FEATURES GRID ===== */}
-      <section className="mb-16 bg-gradient-to-br from-orange-50/60 to-white py-16 px-4 sm:px-6 lg:px-8">
+      <section className="mb-16 bg-gradient-to-br from-indigo-50/60 to-white py-16 px-4 sm:px-6 lg:px-8">
         <SectionHeading subtitle="Everything you need for a seamless shopping experience">
           Why Choose ShopEase
         </SectionHeading>
@@ -774,10 +819,10 @@ const Home = () => {
                 initial="hidden"
                 whileInView="visible"
                 custom={i}
-                className="flex items-start gap-5 p-6 rounded-2xl hover:bg-orange-50 transition-all duration-300 group border border-transparent hover:border-orange-100"
+                className="flex items-start gap-5 p-6 rounded-2xl hover:bg-indigo-50 transition-all duration-300 group border border-transparent hover:border-indigo-100"
               >
-                <div className="bg-orange-100 p-3 rounded-xl group-hover:bg-orange-500 transition-colors shrink-0">
-                  <Icon className="w-6 h-6 text-orange-500 group-hover:text-white transition-colors" />
+                <div className="bg-indigo-100 p-3 rounded-xl group-hover:bg-indigo-500 transition-colors shrink-0">
+                  <Icon className="w-6 h-6 text-indigo-500 group-hover:text-white transition-colors" />
                 </div>
                 <div>
                   <h3 className="font-bold text-lg">{f.title}</h3>
@@ -802,16 +847,16 @@ const Home = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
-              className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-orange-200 transition-colors"
+              className="bg-white border border-gray-200 rounded-2xl overflow-hidden hover:border-indigo-200 transition-colors"
             >
               <button
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                className="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:bg-orange-50/50 transition-colors"
+                className="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:bg-indigo-50/50 transition-colors"
               >
                 <span className="pr-4">{faq.q}</span>
                 <ChevronDown
                   size={18}
-                  className={`text-orange-500 transition-all duration-300 shrink-0 ${
+                  className={`text-indigo-500 transition-all duration-300 shrink-0 ${
                     openFaq === i ? "rotate-180" : ""
                   }`}
                 />
@@ -833,9 +878,9 @@ const Home = () => {
       </section>
 
       {/* ===== SECTION 21: SOCIAL FEED ===== */}
-      <section className="mb-16 bg-gradient-to-br from-orange-50/50 to-white py-16 px-4 sm:px-6 lg:px-8">
+      <section className="mb-16 bg-gradient-to-br from-indigo-50/50 to-white py-16 px-4 sm:px-6 lg:px-8">
         <SectionHeading subtitle="Tag us @shopease for a chance to be featured">
-          <Instagram className="inline w-7 h-7 text-orange-500 -mt-1" /> Follow Us
+          <Instagram className="inline w-7 h-7 text-indigo-500 -mt-1" /> Follow Us
         </SectionHeading>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto">
           {socialPosts.map((post, i) => {
@@ -865,7 +910,7 @@ const Home = () => {
         </div>
 
         {/* Social platform links */}
-        <div className="max-w-3xl mx-auto mt-10 bg-gradient-to-r from-gray-50 to-orange-50 rounded-3xl p-8">
+        <div className="max-w-3xl mx-auto mt-10 bg-gradient-to-r from-gray-50 to-indigo-50 rounded-3xl p-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="text-center sm:text-left">
               <h3 className="text-lg font-bold text-gray-800">Stay connected with us</h3>
@@ -905,7 +950,7 @@ const Home = () => {
       {/* ===== SECTION 23: PROMO GRID ===== */}
       <section className="mb-16 bg-gray-50 py-16 px-4 sm:px-6 lg:px-8">
         <SectionHeading subtitle="Curated collections for every style">
-          <Sparkles className="inline w-7 h-7 text-orange-500 -mt-1" /> Shop by Collection
+          <Sparkles className="inline w-7 h-7 text-indigo-500 -mt-1" /> Shop by Collection
         </SectionHeading>
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
           {promoBanners.map((b, i) => {
@@ -947,7 +992,7 @@ const Home = () => {
         onClick={scrollToTop}
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: showBackTop ? 1 : 0, scale: showBackTop ? 1 : 0 }}
-        className="fixed bottom-8 right-8 z-50 bg-orange-500 text-white p-4 rounded-full shadow-2xl hover:bg-orange-600 hover:scale-110 transition-all duration-300 hover:shadow-orange-500/30"
+        className="fixed bottom-8 right-8 z-50 bg-indigo-500 text-white p-4 rounded-full shadow-2xl hover:bg-indigo-600 hover:scale-110 transition-all duration-300 hover:shadow-indigo-500/30"
       >
         <ArrowUp size={24} />
       </motion.button>

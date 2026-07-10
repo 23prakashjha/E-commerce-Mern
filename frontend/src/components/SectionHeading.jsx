@@ -9,7 +9,7 @@ const SectionHeading = ({ children, subtitle, className = "" }) => (
   >
     <h2 className="text-4xl md:text-5xl font-extrabold">{children}</h2>
     {subtitle && <p className="text-gray-500 mt-3 text-lg max-w-2xl mx-auto">{subtitle}</p>}
-    <div className="w-24 h-1 bg-orange-500 mx-auto mt-4 rounded-full" />
+    <div className="w-24 h-1 bg-indigo-500 mx-auto mt-4 rounded-full" />
   </motion.div>
 );
 

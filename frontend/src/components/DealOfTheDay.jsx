@@ -31,7 +31,7 @@ const DealOfTheDay = ({ product }) => {
   }, []);
 
   return (
-    <section className="mb-24 rounded-3xl overflow-hidden bg-linear-to-br from-orange-600 via-orange-500 to-red-500 text-white shadow-2xl">
+    <section className="mb-24 rounded-3xl overflow-hidden bg-linear-to-br from-indigo-600 via-indigo-500 to-red-500 text-white shadow-2xl">
       <div className="grid lg:grid-cols-2 gap-8 p-10 lg:p-16 items-center">
         <motion.div
           initial={{ opacity: 0, x: -30 }}
@@ -54,7 +54,7 @@ const DealOfTheDay = ({ product }) => {
           </div>
           <Link
             to="/products"
-            className="inline-flex items-center gap-2 bg-white text-orange-600 px-8 py-3 rounded-xl font-bold hover:bg-gray-100 transition shadow-lg"
+            className="inline-flex items-center gap-2 bg-white text-indigo-600 px-8 py-3 rounded-xl font-bold hover:bg-gray-100 transition shadow-lg"
           >
             Grab the Deal <span>→</span>
           </Link>

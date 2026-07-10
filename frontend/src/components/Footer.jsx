@@ -22,11 +22,11 @@ const Footer = () => {
         {/* ================= BRAND (spans 4 cols) ================= */}
         <div className="sm:col-span-2 lg:col-span-4">
           <div className="flex items-center gap-3 mb-4">
-            <div className="bg-linear-to-r from-orange-500 to-orange-600 p-3 rounded-full shadow-lg">
+            <div className="bg-linear-to-r from-indigo-500 to-indigo-600 p-3 rounded-full shadow-lg">
               <Home className="w-5 h-5 text-white" />
             </div>
             <h2 className="text-xl font-bold text-white">
-              Shop<span className="text-orange-500">Ease</span>
+              Shop<span className="text-indigo-500">Ease</span>
             </h2>
           </div>
 
@@ -40,7 +40,7 @@ const Footer = () => {
                 key={idx}
                 href="#"
                 aria-label="Social media"
-                className="p-2.5 rounded-full bg-gray-800 hover:bg-orange-500 transition transform hover:scale-110 shadow-lg"
+                className="p-2.5 rounded-full bg-gray-800 hover:bg-indigo-500 transition transform hover:scale-110 shadow-lg"
               >
                 <Icon size={16} />
               </a>
@@ -59,8 +59,8 @@ const Footer = () => {
               { to: "/contact", label: "Contact" },
             ].map(({ to, label }) => (
               <li key={to}>
-                <Link to={to} className="hover:text-orange-500 transition flex items-center gap-1.5 group">
-                  <ChevronRight size={12} className="text-gray-600 group-hover:text-orange-500 transition" />
+                <Link to={to} className="hover:text-indigo-500 transition flex items-center gap-1.5 group">
+                  <ChevronRight size={12} className="text-gray-600 group-hover:text-indigo-500 transition" />
                   {label}
                 </Link>
               </li>
@@ -74,8 +74,8 @@ const Footer = () => {
           <ul className="space-y-3 text-sm">
             {["FAQs", "Privacy Policy", "Terms & Conditions", "Help Center"].map((item) => (
               <li key={item}>
-                <span className="hover:text-orange-500 transition cursor-pointer flex items-center gap-1.5 group">
-                  <ChevronRight size={12} className="text-gray-600 group-hover:text-orange-500 transition" />
+                <span className="hover:text-indigo-500 transition cursor-pointer flex items-center gap-1.5 group">
+                  <ChevronRight size={12} className="text-gray-600 group-hover:text-indigo-500 transition" />
                   {item}
                 </span>
               </li>
@@ -93,11 +93,11 @@ const Footer = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
-              className="px-4 py-2.5 rounded-lg flex-1 focus:outline-none focus:ring-2 focus:ring-orange-400 border border-gray-700 bg-gray-800 placeholder-gray-500 text-sm"
+              className="px-4 py-2.5 rounded-lg flex-1 focus:outline-none focus:ring-2 focus:ring-indigo-400 border border-gray-700 bg-gray-800 placeholder-gray-500 text-sm"
             />
             <button
               type="submit"
-              className="bg-orange-500 hover:bg-orange-600 text-white font-semibold px-5 py-2.5 rounded-lg shadow-lg transition flex items-center justify-center gap-2 text-sm shrink-0"
+              className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold px-5 py-2.5 rounded-lg shadow-lg transition flex items-center justify-center gap-2 text-sm shrink-0"
             >
               <Mail size={16} /> Subscribe
             </button>
@@ -110,7 +110,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-400 gap-2">
           <p>&copy; {new Date().getFullYear()} ShopEase. All rights reserved.</p>
           <p className="flex items-center gap-1">
-            Made by <span className="text-orange-500 font-medium">Prakash Jha</span>
+            Made by <span className="text-indigo-500 font-medium">Prakash Jha</span>
           </p>
         </div>
       </div>
@@ -118,7 +118,7 @@ const Footer = () => {
       {/* ================= BACK TO TOP ================= */}
       <button
         onClick={scrollToTop}
-        className="absolute -top-5 right-6 bg-orange-500 hover:bg-orange-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition hover:-translate-y-1"
+        className="absolute -top-5 right-6 bg-indigo-500 hover:bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition hover:-translate-y-1"
         aria-label="Back to top"
       >
         <ArrowUp size={20} />

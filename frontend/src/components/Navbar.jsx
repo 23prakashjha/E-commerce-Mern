@@ -19,8 +19,8 @@ const Navbar = () => {
   const navLinkClass = ({ isActive }) =>
     `${baseLink} ${
       isActive
-        ? "text-orange-600 bg-orange-100 font-semibold"
-        : "text-gray-700 hover:text-orange-600 hover:bg-orange-50"
+        ? "text-indigo-600 bg-indigo-100 font-semibold"
+        : "text-gray-700 hover:text-indigo-600 hover:bg-indigo-50"
     }`;
 
   const handleLogout = () => {
@@ -61,11 +61,11 @@ const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="bg-linear-to-r from-orange-500 to-orange-600 p-2 rounded-full shadow-lg">
+          <div className="bg-linear-to-r from-indigo-500 to-indigo-600 p-2 rounded-full shadow-lg">
             <Home className="w-5 h-5 text-white" />
           </div>
           <span className="text-xl font-extrabold text-gray-800">
-            Shop<span className="text-orange-600">Ease</span>
+            Shop<span className="text-indigo-600">Ease</span>
           </span>
         </Link>
 
@@ -81,13 +81,13 @@ const Navbar = () => {
         {/* Desktop Right */}
         <div className="hidden md:flex items-center gap-3">
           <NavLink to="/cart"
-            className="flex items-center gap-2 text-gray-700 hover:text-orange-600 transition px-3 py-2 rounded-lg text-sm font-medium">
+            className="flex items-center gap-2 text-gray-700 hover:text-indigo-600 transition px-3 py-2 rounded-lg text-sm font-medium">
             <ShoppingCart size={18} /> Cart
           </NavLink>
 
           {!user ? (
             <NavLink to="/register"
-              className="flex items-center gap-2 bg-orange-500 text-white px-4 py-2 rounded-lg hover:bg-orange-600 transition shadow-md text-sm font-semibold">
+              className="flex items-center gap-2 bg-indigo-500 text-white px-4 py-2 rounded-lg hover:bg-indigo-600 transition shadow-md text-sm font-semibold">
               <UserPlus size={18} /> Sign Up
             </NavLink>
           ) : (
@@ -106,13 +106,13 @@ const Navbar = () => {
                     className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl z-50 overflow-hidden border border-gray-100"
                   >
                     <Link to="/profile"
-                      className="flex items-center gap-2.5 px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition text-sm font-medium"
+                      className="flex items-center gap-2.5 px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition text-sm font-medium"
                       onClick={() => setDropdownOpen(false)}>
                       <User size={16} /> Profile
                     </Link>
                     {user.isAdmin && (
                       <Link to="/admin"
-                        className="flex items-center gap-2.5 px-4 py-3 text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition text-sm font-medium"
+                        className="flex items-center gap-2.5 px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-600 transition text-sm font-medium"
                         onClick={() => setDropdownOpen(false)}>
                         <LayoutDashboard size={16} /> Dashboard
                       </Link>
@@ -163,8 +163,8 @@ const Navbar = () => {
                     className={({ isActive }) =>
                       `flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm font-medium ${
                         isActive
-                          ? "bg-orange-100 text-orange-600 font-semibold"
-                          : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
+                          ? "bg-indigo-100 text-indigo-600 font-semibold"
+                          : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
                       }`
                     }
                   >
@@ -178,8 +178,8 @@ const Navbar = () => {
                   className={({ isActive }) =>
                     `flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm font-medium ${
                       isActive
-                        ? "bg-orange-100 text-orange-600 font-semibold"
-                        : "text-gray-700 hover:bg-orange-50 hover:text-orange-600"
+                        ? "bg-indigo-100 text-indigo-600 font-semibold"
+                        : "text-gray-700 hover:bg-indigo-50 hover:text-indigo-600"
                     }`
                   }>
                   <ShoppingCart size={18} /> Cart
@@ -188,19 +188,19 @@ const Navbar = () => {
                 {!user ? (
                   <>
                     <NavLink to="/register" onClick={closeMenus}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-orange-500 text-white font-semibold text-sm mt-2">
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-500 text-white font-semibold text-sm mt-2">
                       <UserPlus size={18} /> Sign Up / Login
                     </NavLink>
                   </>
                 ) : (
                   <>
                     <NavLink to="/profile" onClick={closeMenus}
-                      className="flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm font-medium text-gray-700 hover:bg-orange-50 hover:text-orange-600">
+                      className="flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm font-medium text-gray-700 hover:bg-indigo-50 hover:text-indigo-600">
                       <User size={18} /> Profile
                     </NavLink>
                     {user.isAdmin && (
                       <NavLink to="/admin" onClick={closeMenus}
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm font-medium text-orange-600 hover:bg-orange-50">
+                        className="flex items-center gap-3 px-4 py-3 rounded-xl transition text-sm font-medium text-indigo-600 hover:bg-indigo-50">
                         <LayoutDashboard size={18} /> Dashboard
                       </NavLink>
                     )}

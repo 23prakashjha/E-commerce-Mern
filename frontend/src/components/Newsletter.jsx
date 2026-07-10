@@ -23,7 +23,7 @@ const Newsletter = () => {
       >
         <h2 className="text-4xl md:text-5xl font-extrabold mb-6">Join Our Style Club</h2>
         <p className="text-gray-600 mb-10 text-lg max-w-xl mx-auto">
-          Subscribe and get <span className="text-orange-500 font-bold">20% off</span> your first order.
+          Subscribe and get <span className="text-indigo-500 font-bold">20% off</span> your first order.
           Be the first to know about new drops and exclusive offers.
         </p>
       </motion.div>
@@ -35,16 +35,16 @@ const Newsletter = () => {
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Enter your email"
             required
-            className="px-6 py-4 rounded-2xl border w-full focus:outline-none focus:ring-2 focus:ring-orange-500 pr-24"
+            className="px-6 py-4 rounded-2xl border w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-24"
           />
-          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-orange-500 text-sm font-semibold bg-orange-50 px-2 py-1 rounded-lg">
+          <span className="absolute right-3 top-1/2 -translate-y-1/2 text-indigo-500 text-sm font-semibold bg-indigo-50 px-2 py-1 rounded-lg">
             -20%
           </span>
         </div>
         <motion.button
           whileTap={{ scale: 0.95 }}
           type="submit"
-          className="bg-orange-500 hover:bg-orange-600 text-white px-10 py-4 rounded-2xl font-semibold transition shadow-lg"
+          className="bg-indigo-500 hover:bg-indigo-600 text-white px-10 py-4 rounded-2xl font-semibold transition shadow-lg"
         >
           {subscribed ? "Subscribed!" : "Subscribe"}
         </motion.button>
