@@ -131,16 +131,15 @@ const ProductDetails = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-14">
-      <div className="grid lg:grid-cols-2 gap-14">
-        <div className="space-y-4">
-          <ImageZoom src={currentImage} alt={product.name} />
+      <div className="grid lg:grid-cols-[auto_1fr_1fr] gap-6 lg:gap-14">
+        <div className="flex gap-4">
           {images.length > 1 && (
-            <div className="flex gap-3 overflow-x-auto pb-2">
+            <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[500px] flex-shrink-0 pb-2 lg:pb-0">
               {images.map((img, i) => (
                 <button
                   key={i}
                   onClick={() => setSelectedImage(i)}
-                  className={`flex-shrink-0 w-16 h-16 rounded-xl overflow-hidden border-2 transition ${
+                  className={`flex-shrink-0 w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden border-2 transition ${
                     selectedImage === i
                       ? "border-orange-500 ring-2 ring-orange-300"
                       : "border-gray-200 hover:border-gray-400"
@@ -151,6 +150,9 @@ const ProductDetails = () => {
               ))}
             </div>
           )}
+          <div className="flex-1">
+            <ImageZoom src={currentImage} alt={product.name} />
+          </div>
         </div>
 
         <div className="space-y-6">

@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { api, getImageUrl } from "../services/api";
 import config from "../config";
 import { Link } from "react-router-dom";
-import { Search, ChevronLeft, ChevronRight, SlidersHorizontal, ImageOff } from "lucide-react";
+import { Search, ChevronLeft, ChevronRight, SlidersHorizontal, ImageOff, Star, Box, ShoppingCart } from "lucide-react";
 import { motion } from "framer-motion";
 
 const PER_PAGE = 20;
@@ -14,7 +14,6 @@ const ProductsList = () => {
   const [category, setCategory] = useState("All");
   const [sort, setSort] = useState("");
   const [page, setPage] = useState(1);
-  const [currentImage, setCurrentImage] = useState({});
   const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
@@ -22,9 +21,6 @@ const ProductsList = () => {
       try {
         const res = await api.get("/products");
         setProducts(res.data);
-        const initialIndex = {};
-        res.data.forEach((p) => (initialIndex[p._id] = 0));
-        setCurrentImage(initialIndex);
       } catch (err) {
         console.error(err);
       }
@@ -47,20 +43,6 @@ const ProductsList = () => {
     () => filteredProducts.slice((safePage - 1) * PER_PAGE, safePage * PER_PAGE),
     [filteredProducts, safePage]
   );
-
-  const handlePrevImage = (id) => {
-    setCurrentImage((prev) => ({
-      ...prev,
-      [id]: prev[id] === 0 ? products.find((p) => p._id === id).images.length - 1 : prev[id] - 1,
-    }));
-  };
-
-  const handleNextImage = (id) => {
-    setCurrentImage((prev) => ({
-      ...prev,
-      [id]: (prev[id] + 1) % products.find((p) => p._id === id).images.length,
-    }));
-  };
 
   const handlePageChange = (p) => {
     setPage(p);
@@ -162,53 +144,73 @@ const ProductsList = () => {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {paginatedProducts.map((p) => (
-              <Link to={`/products/${p._id}`} key={p._id} className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden group relative">
-                <div className="relative h-60 w-full overflow-hidden bg-gray-100">
-                  {p.images && p.images.length > 0 ? (
-                    <>
+            {paginatedProducts.map((p) => {
+              const outOfStock = p.countInStock != null && p.countInStock <= 0;
+              return (
+                <Link to={`/products/${p._id}`} key={p._id} className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden group relative flex flex-col">
+                  <div className="relative h-60 w-full overflow-hidden bg-gray-100">
+                    {p.images && p.images.length > 0 ? (
                       <img
-                        src={getImageUrl({ images: p.images, image: p.images[currentImage[p._id]] })}
+                        src={getImageUrl({ images: p.images, image: p.images[0] })}
                         alt={p.name}
                         onError={(e) => { e.currentTarget.src = config.FALLBACK_IMAGE; }}
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
-                      {p.images.length > 1 && (
-                        <>
-                          <button onClick={(e) => { e.preventDefault(); handlePrevImage(p._id); }} className="absolute left-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-1.5 rounded-full hover:bg-black/70 transition">
-                            <ChevronLeft size={16} />
-                          </button>
-                          <button onClick={(e) => { e.preventDefault(); handleNextImage(p._id); }} className="absolute right-2 top-1/2 -translate-y-1/2 bg-black/40 text-white p-1.5 rounded-full hover:bg-black/70 transition">
-                            <ChevronRight size={16} />
-                          </button>
-                          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
-                            {p.images.map((_, idx) => (
-                              <span key={idx} className={`w-1.5 h-1.5 rounded-full ${idx === currentImage[p._id] ? "bg-white" : "bg-white/40"}`} />
-                            ))}
-                          </div>
-                        </>
-                      )}
-                    </>
-                  ) : (
-                    <div className="flex items-center justify-center h-full">
-                      <div className="text-center">
-                        <ImageOff size={32} className="mx-auto text-gray-300 mb-2" />
-                        <p className="text-xs text-gray-400">No image</p>
+                    ) : (
+                      <div className="flex items-center justify-center h-full">
+                        <div className="text-center">
+                          <ImageOff size={32} className="mx-auto text-gray-300 mb-2" />
+                          <p className="text-xs text-gray-400">No image</p>
+                        </div>
                       </div>
-                    </div>
-                  )}
-                  <span className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">{p.category || "General"}</span>
-                </div>
-                <div className="p-4">
-                  <h2 className="font-semibold text-base truncate">{p.name}</h2>
-                  {p.description && <p className="text-sm text-gray-400 line-clamp-2 mt-1">{p.description}</p>}
-                  <div className="flex items-center justify-between mt-3">
-                    <p className="text-orange-500 font-bold text-lg">₹{p.price}</p>
-                    <span className="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full font-medium">{p.category}</span>
+                    )}
+                    <span className="absolute top-3 left-3 bg-orange-500 text-white text-xs font-semibold px-3 py-1 rounded-full shadow">{p.category || "General"}</span>
+                    {outOfStock && (
+                      <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                        <span className="bg-red-500 text-white text-sm font-bold px-4 py-2 rounded-full">Out of Stock</span>
+                      </div>
+                    )}
+                    {p.discountPrice > 0 && (
+                      <span className="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow">
+                        {Math.round((1 - p.discountPrice / p.price) * 100)}% OFF
+                      </span>
+                    )}
                   </div>
-                </div>
-              </Link>
-            ))}
+                  <div className="p-4 flex flex-col flex-1">
+                    <h2 className="font-semibold text-base truncate group-hover:text-orange-500 transition-colors">{p.name}</h2>
+                    {p.description && <p className="text-sm text-gray-400 line-clamp-2 mt-1">{p.description}</p>}
+
+                    <div className="flex items-baseline gap-2 mt-2">
+                      <p className="text-orange-500 font-bold text-lg">₹{p.discountPrice > 0 ? p.discountPrice : p.price}</p>
+                      {p.discountPrice > 0 && (
+                        <span className="text-gray-400 text-sm line-through">₹{p.price}</span>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                      <span className="flex items-center gap-1 text-yellow-500 font-medium">
+                        <Star size={12} className="fill-yellow-500" /> {p.rating || "0"}
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <Box size={12} /> Stock: {p.countInStock ?? 0}
+                      </span>
+                    </div>
+
+                    <div className="mt-auto pt-3">
+                      {outOfStock ? (
+                        <span className="block w-full text-center text-sm text-red-400 font-medium py-2 border border-red-200 rounded-xl bg-red-50">
+                          Unavailable
+                        </span>
+                      ) : (
+                        <span className="block w-full text-center text-sm text-orange-500 font-medium py-2 border border-orange-200 rounded-xl bg-orange-50/50 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
+                          <ShoppingCart size={14} className="inline mr-1.5" /> View Details
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
 
           {totalPages > 1 && (

@@ -115,10 +115,18 @@ const CategoryProducts = () => {
                   <h3 className="font-semibold text-sm sm:text-base truncate group-hover:text-orange-500 transition-colors">
                     {p.name}
                   </h3>
-                  <div className="flex items-center justify-between mt-2">
-                    <span className="text-orange-500 font-bold text-lg">₹{p.price}</span>
-                    <span className="flex items-center gap-1 text-yellow-500 text-xs font-medium">
-                      <Star size={12} className="fill-yellow-500" /> {p.rating || 4.5}
+                  <div className="flex items-baseline gap-2 mt-2">
+                    <span className="text-orange-500 font-bold text-lg">₹{p.discountPrice > 0 ? p.discountPrice : p.price}</span>
+                    {p.discountPrice > 0 && (
+                      <span className="text-gray-400 text-sm line-through">₹{p.price}</span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                    <span className="flex items-center gap-1 text-yellow-500 font-medium">
+                      <Star size={12} className="fill-yellow-500" /> {p.rating || 0}
+                    </span>
+                    <span className="flex items-center gap-1">
+                      Stock: {p.countInStock ?? 0}
                     </span>
                   </div>
                   {p.description && (
