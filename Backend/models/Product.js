@@ -17,6 +17,21 @@ const productSchema = new mongoose.Schema(
       min: [0, "Price cannot be negative"],
       default: 0,
     },
+    discountPrice: {
+      type: Number,
+      default: 0,
+      min: [0, "Discount price cannot be negative"],
+    },
+    rating: {
+      type: Number,
+      default: 0,
+      min: [0, "Rating cannot be less than 0"],
+      max: [5, "Rating cannot be more than 5"],
+    },
+    numReviews: {
+      type: Number,
+      default: 0,
+    },
     images: {
       type: [String], // Array of image paths or URLs
       required: [true, "At least one product image is required"],

@@ -174,12 +174,12 @@ const ProductDetails = () => {
 
           <div className="flex items-baseline gap-3">
             <p className="text-4xl font-bold text-orange-500">₹{product.price.toFixed(2)}</p>
-            {product.originalPrice && (
-              <p className="text-lg text-gray-400 line-through">₹{product.originalPrice.toFixed(2)}</p>
+            {product.discountPrice > 0 && (
+              <p className="text-lg text-gray-400 line-through">₹{product.discountPrice.toFixed(2)}</p>
             )}
-            {product.originalPrice && (
+            {product.discountPrice > 0 && (
               <span className="bg-green-100 text-green-700 text-sm font-bold px-2 py-0.5 rounded">
-                {Math.round((1 - product.price / product.originalPrice) * 100)}% OFF
+                {Math.round((1 - product.price / product.discountPrice) * 100)}% OFF
               </span>
             )}
           </div>

@@ -1,6 +1,5 @@
 import Product from "../models/Product.js";
-import fs from "fs";
-import path from "path";
+import { uploadToCloudinary, deleteFromCloudinary } from "../middleware/upload.js";
 
 /* ================= GET ALL PRODUCTS ================= */
 export const getProducts = async (req, res) => {
@@ -30,23 +29,27 @@ export const getProductById = async (req, res) => {
 /* ================= CREATE PRODUCT ================= */
 export const createProduct = async (req, res) => {
   try {
-    const { name, price, category, description, countInStock } = req.body;
+    const { name, price, discountPrice, category, description, countInStock, rating, numReviews } = req.body;
 
     if (!req.files || req.files.length === 0) {
       return res.status(400).json({ message: "At least one image is required" });
     }
 
-    // ✅ STORE RELATIVE PATHS (NO LEADING SLASH)
-    const images = req.files.map(
-      (file) => `uploads/${file.filename}`
+    const uploadResults = await Promise.all(
+      req.files.map((file) => uploadToCloudinary(file))
     );
+
+    const images = uploadResults.map((result) => result.secure_url);
 
     const product = await Product.create({
       name,
       price,
+      discountPrice: discountPrice || 0,
       category,
       description: description || "",
       countInStock: countInStock || 0,
+      rating: rating || 0,
+      numReviews: numReviews || 0,
       images,
     });
 
@@ -60,7 +63,7 @@ export const createProduct = async (req, res) => {
 /* ================= UPDATE PRODUCT ================= */
 export const updateProduct = async (req, res) => {
   try {
-    const { name, price, category, description, countInStock } = req.body;
+    const { name, price, discountPrice, category, description, countInStock, rating, numReviews } = req.body;
 
     const product = await Product.findById(req.params.id);
     if (!product)
@@ -68,23 +71,21 @@ export const updateProduct = async (req, res) => {
 
     product.name = name ?? product.name;
     product.price = price ?? product.price;
+    product.discountPrice = discountPrice ?? product.discountPrice;
     product.category = category ?? product.category;
     product.description = description ?? product.description;
     product.countInStock = countInStock ?? product.countInStock;
+    product.rating = rating ?? product.rating;
+    product.numReviews = numReviews ?? product.numReviews;
 
-    // Replace images if new ones uploaded
     if (req.files && req.files.length > 0) {
-      // 🧹 Delete old images safely
-      product.images.forEach((imgPath) => {
-        const filePath = path.join(process.cwd(), imgPath);
-        if (fs.existsSync(filePath)) {
-          fs.unlinkSync(filePath);
-        }
-      });
+      await Promise.all(product.images.map((url) => deleteFromCloudinary(url)));
 
-      product.images = req.files.map(
-        (file) => `uploads/${file.filename}`
+      const uploadResults = await Promise.all(
+        req.files.map((file) => uploadToCloudinary(file))
       );
+
+      product.images = uploadResults.map((result) => result.secure_url);
     }
 
     await product.save();
@@ -102,13 +103,7 @@ export const deleteProduct = async (req, res) => {
     if (!product)
       return res.status(404).json({ message: "Product not found" });
 
-    // 🧹 Delete images from disk
-    product.images.forEach((imgPath) => {
-      const filePath = path.join(process.cwd(), imgPath);
-      if (fs.existsSync(filePath)) {
-        fs.unlinkSync(filePath);
-      }
-    });
+    await Promise.all(product.images.map((url) => deleteFromCloudinary(url)));
 
     await product.deleteOne();
     res.json({ message: "Product deleted successfully" });
@@ -117,6 +112,3 @@ export const deleteProduct = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
-
-
-

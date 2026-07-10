@@ -2,12 +2,12 @@ import { useEffect, useMemo, useState, useContext } from "react";
 import { api, getImageUrl } from "../services/api";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Trash2, Plus, Search, Package, Upload, X } from "lucide-react";
+import { Trash2, Plus, Search, Package, Upload, X, Star, Tag, Box } from "lucide-react";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 
 const emptyProduct = {
-  name: "", price: "", category: "Mens", description: "", images: [], imagePreviews: [],
+  name: "", price: "", discountPrice: "", category: "Mens", description: "", countInStock: "", rating: "", numReviews: "", images: [], imagePreviews: [],
 };
 
 const categories = ["Mens", "Womens", "Children", "Accessories"];
@@ -50,8 +50,12 @@ const Products = () => {
       const formData = new FormData();
       formData.append("name", newProduct.name);
       formData.append("price", newProduct.price);
+      formData.append("discountPrice", newProduct.discountPrice || 0);
       formData.append("category", newProduct.category);
       formData.append("description", newProduct.description);
+      formData.append("countInStock", newProduct.countInStock || 0);
+      formData.append("rating", newProduct.rating || 0);
+      formData.append("numReviews", newProduct.numReviews || 0);
       newProduct.images.forEach((img) => formData.append("images", img));
 
       const res = await api.post("/products", formData);
@@ -136,8 +140,21 @@ const Products = () => {
             <div className="p-5 flex-1 flex flex-col justify-between">
               <div>
                 <h2 className="font-semibold text-lg truncate">{p.name}</h2>
-                <p className="text-orange-500 font-bold mt-1 text-lg">₹{p.price}</p>
-                <span className="inline-block bg-orange-50 text-orange-600 text-xs font-medium px-2 py-0.5 rounded-full mt-1">{p.category}</span>
+                <div className="flex items-baseline gap-2 mt-1">
+                  <p className="text-orange-500 font-bold text-lg">₹{p.price}</p>
+                  {p.discountPrice > 0 && (
+                    <span className="text-gray-400 text-sm line-through">₹{p.discountPrice}</span>
+                  )}
+                </div>
+                <div className="flex flex-wrap gap-2 mt-2">
+                  <span className="inline-block bg-orange-50 text-orange-600 text-xs font-medium px-2 py-0.5 rounded-full">{p.category}</span>
+                  <span className="inline-block bg-blue-50 text-blue-600 text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <Box size={10} /> Stock: {p.countInStock ?? 0}
+                  </span>
+                  <span className="inline-block bg-yellow-50 text-yellow-600 text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
+                    <Star size={10} className="fill-yellow-500" /> {p.rating ?? 0} ({p.numReviews ?? 0})
+                  </span>
+                </div>
                 {p.description && <p className="text-gray-600 mt-2 text-sm line-clamp-2">{p.description}</p>}
               </div>
               <button onClick={() => deleteProduct(p._id)}
@@ -163,8 +180,35 @@ const Products = () => {
               <form onSubmit={addProduct} className="space-y-4">
                 <input placeholder="Product name" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
                   value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} required />
-                <input type="number" placeholder="Price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
-                  value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} required />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Price (₹)</label>
+                    <input type="number" placeholder="Selling price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} required />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Discount Price (₹)</label>
+                    <input type="number" placeholder="Original / MRP price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={newProduct.discountPrice} onChange={(e) => setNewProduct({ ...newProduct, discountPrice: e.target.value })} />
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Box size={12} /> Stock</label>
+                    <input type="number" placeholder="Qty" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={newProduct.countInStock} onChange={(e) => setNewProduct({ ...newProduct, countInStock: e.target.value })} />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Star size={12} /> Rating (0-5)</label>
+                    <input type="number" step="0.1" min="0" max="5" placeholder="0-5" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={newProduct.rating} onChange={(e) => setNewProduct({ ...newProduct, rating: e.target.value })} />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1">Reviews</label>
+                    <input type="number" placeholder="0" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={newProduct.numReviews} onChange={(e) => setNewProduct({ ...newProduct, numReviews: e.target.value })} />
+                  </div>
+                </div>
                 <select value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
                   className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none">
                   {categories.map((c) => <option key={c} value={c}>{c}</option>)}

@@ -1,41 +1,14 @@
 import multer from "multer";
-import path from "path";
-import fs from "fs";
-import { fileURLToPath } from "url";
+import cloudinary from "../config/cloudinary.js";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const storage = multer.memoryStorage();
 
-const uploadDir = path.join(__dirname, "uploads");
-
-// Ensure uploads folder exists
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-// Storage
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const baseName = path
-      .basename(file.originalname, ext)
-      .replace(/\s+/g, "-")
-      .toLowerCase();
-
-    cb(null, `${baseName}-${Date.now()}${ext}`);
-  },
-});
-
-// Image filter
 const fileFilter = (req, file, cb) => {
-  const allowed = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
+  const allowed = ["image/jpeg", "image/png", "image/jpg", "image/gif", "image/webp"];
   if (allowed.includes(file.mimetype)) {
     cb(null, true);
   } else {
-    cb(new Error("Only image files are allowed"), false);
+    cb(new Error("Only image files (jpeg, png, jpg, gif, webp) are allowed"), false);
   }
 };
 
@@ -43,11 +16,35 @@ const upload = multer({
   storage,
   fileFilter,
   limits: {
-    fileSize: 5 * 1024 * 1024, // 5MB
+    fileSize: 5 * 1024 * 1024,
   },
 });
 
+export const uploadToCloudinary = (file) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder: "ecommerce-products",
+        resource_type: "image",
+      },
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      }
+    );
+    stream.end(file.buffer);
+  });
+};
+
+export const deleteFromCloudinary = async (imageUrl) => {
+  try {
+    const parts = imageUrl.split("/");
+    const folderAndFile = parts.slice(parts.indexOf("upload") + 1).join("/");
+    const publicId = folderAndFile.replace(/\.[^/.]+$/, "");
+    await cloudinary.uploader.destroy(publicId);
+  } catch (err) {
+    console.error("Cloudinary delete error:", err.message);
+  }
+};
+
 export default upload;
-
-
-

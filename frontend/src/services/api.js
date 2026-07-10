@@ -39,6 +39,7 @@ api.interceptors.response.use(
 export const getImageUrl = (product) => {
   let path = product?.image || product?.images?.[0];
   if (!path) return config.FALLBACK_IMAGE;
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
   if (!path.startsWith("uploads")) path = `uploads/${path}`;
   return `${config.API_URL}/${path}`;
 };
