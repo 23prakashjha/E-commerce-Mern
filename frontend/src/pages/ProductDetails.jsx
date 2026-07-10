@@ -131,7 +131,7 @@ const ProductDetails = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-14">
-      <div className="grid lg:grid-cols-[auto_1fr_1fr] gap-6 lg:gap-14">
+      <div className="grid lg:grid-cols-2 gap-10 lg:gap-14">
         <div className="flex gap-4">
           {images.length > 1 && (
             <div className="flex lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto lg:max-h-[500px] flex-shrink-0 pb-2 lg:pb-0">
@@ -150,7 +150,7 @@ const ProductDetails = () => {
               ))}
             </div>
           )}
-          <div className="flex-1">
+          <div className="flex-1 min-w-0">
             <ImageZoom src={currentImage} alt={product.name} />
           </div>
         </div>
