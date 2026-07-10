@@ -83,9 +83,20 @@ app.use((req, res) => {
 /* ================= ERROR HANDLER ================= */
 app.use((err, req, res, next) => {
   console.error("Server Error:", err.stack || err);
+
+  if (err.code === "LIMIT_FILE_SIZE") {
+    return res.status(400).json({ message: "File too large. Max size is 5MB." });
+  }
+  if (err.code === "LIMIT_UNEXPECTED_FILE") {
+    return res.status(400).json({ message: "Unexpected field name in file upload." });
+  }
+  if (err.message && err.message.includes("Only image files")) {
+    return res.status(400).json({ message: err.message });
+  }
+
   const status = err.status || 500;
   res.status(status).json({
-    message: status === 500 ? "Internal Server Error" : err.message,
+    message: status === 500 ? (err.message || "Internal Server Error") : err.message,
     ...(process.env.NODE_ENV === "development" && { stack: err.stack }),
   });
 });

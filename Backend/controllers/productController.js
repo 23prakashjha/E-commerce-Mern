@@ -35,9 +35,19 @@ export const createProduct = async (req, res) => {
       return res.status(400).json({ message: "At least one image is required" });
     }
 
-    const uploadResults = await Promise.all(
-      req.files.map((file) => uploadToCloudinary(file))
-    );
+    if (!process.env.CLOUDINARY_CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+      return res.status(500).json({ message: "Cloudinary is not configured. Set CLOUDINARY env variables on your server." });
+    }
+
+    let uploadResults;
+    try {
+      uploadResults = await Promise.all(
+        req.files.map((file) => uploadToCloudinary(file))
+      );
+    } catch (uploadErr) {
+      console.error("Cloudinary upload error:", uploadErr);
+      return res.status(500).json({ message: "Image upload failed: " + uploadErr.message });
+    }
 
     const images = uploadResults.map((result) => result.secure_url);
 
@@ -55,8 +65,8 @@ export const createProduct = async (req, res) => {
 
     res.status(201).json(product);
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Server Error" });
+    console.error("Create product error:", err);
+    res.status(500).json({ message: err.message || "Server Error" });
   }
 };
 
