@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState, useContext } from "react";
 import { api, getImageUrl } from "../services/api";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Trash2, Plus, Search, Package, Upload, X, Star, Tag, Box } from "lucide-react";
+import { Trash2, Plus, Search, Package, Upload, X, Star, Tag, Box, Pencil } from "lucide-react";
 import { toast } from "react-toastify";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -22,6 +22,9 @@ const Products = () => {
   const [categoryFilter, setCategoryFilter] = useState("All");
   const [fullImage, setFullImage] = useState(null);
   const [adminLoading, setAdminLoading] = useState(true);
+  const [editingProduct, setEditingProduct] = useState(null);
+  const [editData, setEditData] = useState({});
+  const [editPreviews, setEditPreviews] = useState([]);
 
   useEffect(() => {
     if (!user || !user.isAdmin) {
@@ -77,6 +80,46 @@ const Products = () => {
       toast.success("Product deleted");
     } catch {
       toast.error("Delete failed");
+    }
+  };
+
+  const openEdit = (p) => {
+    setEditingProduct(p);
+    setEditData({
+      name: p.name,
+      price: p.price,
+      discountPrice: p.discountPrice || 0,
+      category: p.category,
+      description: p.description || "",
+      countInStock: p.countInStock || 0,
+      rating: p.rating || 0,
+      numReviews: p.numReviews || 0,
+    });
+    setEditPreviews([]);
+  };
+
+  const updateProduct = async (e) => {
+    e.preventDefault();
+    try {
+      const formData = new FormData();
+      formData.append("name", editData.name);
+      formData.append("price", editData.price);
+      formData.append("discountPrice", editData.discountPrice || 0);
+      formData.append("category", editData.category);
+      formData.append("description", editData.description);
+      formData.append("countInStock", editData.countInStock || 0);
+      formData.append("rating", editData.rating || 0);
+      formData.append("numReviews", editData.numReviews || 0);
+      if (editData.images) {
+        editData.images.forEach((img) => formData.append("images", img));
+      }
+
+      const res = await api.put(`/products/${editingProduct._id}`, formData);
+      setProducts((prev) => prev.map((p) => (p._id === editingProduct._id ? res.data : p)));
+      toast.success("Product updated");
+      setEditingProduct(null);
+    } catch (err) {
+      toast.error("Failed to update product");
     }
   };
 
@@ -141,9 +184,12 @@ const Products = () => {
               <div>
                 <h2 className="font-semibold text-lg truncate">{p.name}</h2>
                 <div className="flex items-baseline gap-2 mt-1">
-                  <p className="text-orange-500 font-bold text-lg">₹{p.price}</p>
+                  <p className="text-orange-500 font-bold text-lg">₹{p.discountPrice > 0 ? p.discountPrice : p.price}</p>
                   {p.discountPrice > 0 && (
-                    <span className="text-gray-400 text-sm line-through">₹{p.discountPrice}</span>
+                    <span className="text-gray-400 text-sm line-through">₹{p.price}</span>
+                  )}
+                  {p.discountPrice > 0 && (
+                    <span className="bg-green-100 text-green-700 text-xs font-bold px-1.5 py-0.5 rounded">{Math.round((1 - p.discountPrice / p.price) * 100)}% OFF</span>
                   )}
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
@@ -157,11 +203,18 @@ const Products = () => {
                 </div>
                 {p.description && <p className="text-gray-600 mt-2 text-sm line-clamp-2">{p.description}</p>}
               </div>
-              <button onClick={() => deleteProduct(p._id)}
-                className="mt-4 flex items-center justify-center gap-2 text-red-500 hover:text-white bg-red-50 hover:bg-red-500 p-2.5 rounded-xl transition-all font-medium text-sm">
-                <Trash2 size={18} />
-                Delete
-              </button>
+              <div className="flex gap-2 mt-4">
+                <button onClick={() => openEdit(p)}
+                  className="flex-1 flex items-center justify-center gap-2 text-orange-500 hover:text-white bg-orange-50 hover:bg-orange-500 p-2.5 rounded-xl transition-all font-medium text-sm">
+                  <Pencil size={18} />
+                  Edit
+                </button>
+                <button onClick={() => deleteProduct(p._id)}
+                  className="flex-1 flex items-center justify-center gap-2 text-red-500 hover:text-white bg-red-50 hover:bg-red-500 p-2.5 rounded-xl transition-all font-medium text-sm">
+                  <Trash2 size={18} />
+                  Delete
+                </button>
+              </div>
             </div>
           </motion.div>
         ))}
@@ -182,13 +235,13 @@ const Products = () => {
                   value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} required />
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Price (₹)</label>
-                    <input type="number" placeholder="Selling price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Original Price (₹)</label>
+                    <input type="number" placeholder="MRP / original price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
                       value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} required />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Discount Price (₹)</label>
-                    <input type="number" placeholder="Original / MRP price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Sale Price (₹)</label>
+                    <input type="number" placeholder="Discounted selling price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
                       value={newProduct.discountPrice} onChange={(e) => setNewProduct({ ...newProduct, discountPrice: e.target.value })} />
                   </div>
                 </div>
@@ -238,6 +291,86 @@ const Products = () => {
                   <button type="button" onClick={() => setShowModal(false)}
                     className="px-4 py-2 rounded-lg border hover:bg-gray-50 transition">Cancel</button>
                   <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition">Add Product</button>
+                </div>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {editingProduct && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} exit={{ scale: 0.8 }}
+              className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl relative overflow-y-auto max-h-[90vh]">
+              <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onClick={() => setEditingProduct(null)}>
+                <X size={20} />
+              </button>
+              <h2 className="text-xl font-bold mb-4">Edit Product</h2>
+              <form onSubmit={updateProduct} className="space-y-4">
+                <input placeholder="Product name" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                  value={editData.name || ""} onChange={(e) => setEditData({ ...editData, name: e.target.value })} required />
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Original Price (₹)</label>
+                    <input type="number" placeholder="MRP / original price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={editData.price || ""} onChange={(e) => setEditData({ ...editData, price: e.target.value })} required />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Sale Price (₹)</label>
+                    <input type="number" placeholder="Discounted selling price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={editData.discountPrice || ""} onChange={(e) => setEditData({ ...editData, discountPrice: e.target.value })} />
+                  </div>
+                </div>
+                <div className="grid grid-cols-3 gap-3">
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Box size={12} /> Stock</label>
+                    <input type="number" placeholder="Qty" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={editData.countInStock || ""} onChange={(e) => setEditData({ ...editData, countInStock: e.target.value })} />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Star size={12} /> Rating (0-5)</label>
+                    <input type="number" step="0.1" min="0" max="5" placeholder="0-5" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={editData.rating || ""} onChange={(e) => setEditData({ ...editData, rating: e.target.value })} />
+                  </div>
+                  <div>
+                    <label className="text-sm font-medium text-gray-600 mb-1">Reviews</label>
+                    <input type="number" placeholder="0" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                      value={editData.numReviews || ""} onChange={(e) => setEditData({ ...editData, numReviews: e.target.value })} />
+                  </div>
+                </div>
+                <select value={editData.category || ""} onChange={(e) => setEditData({ ...editData, category: e.target.value })}
+                  className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none">
+                  {categories.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+                <textarea placeholder="Product description" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none resize-none"
+                  value={editData.description || ""} onChange={(e) => setEditData({ ...editData, description: e.target.value })} rows={4} />
+                <label className="flex flex-col items-center gap-2 cursor-pointer border border-dashed p-4 rounded-lg hover:bg-orange-50 transition">
+                  <Upload className="text-orange-500 w-6 h-6" />
+                  <span className="text-gray-500">
+                    {editPreviews.length > 0 ? `${editPreviews.length} new image(s) selected (replaces existing)` : "Upload new images (optional)"}
+                  </span>
+                  <input type="file" multiple accept="image/*" className="hidden"
+                    onChange={(e) => {
+                      const files = Array.from(e.target.files);
+                      const previews = files.map((file) => URL.createObjectURL(file));
+                      editPreviews.forEach(URL.revokeObjectURL);
+                      setEditData({ ...editData, images: files });
+                      setEditPreviews(previews);
+                    }} />
+                </label>
+                {editPreviews.length > 0 && (
+                  <div className="flex gap-2 overflow-x-auto mt-2">
+                    {editPreviews.map((img, idx) => (
+                      <img key={idx} src={img} alt={`Preview ${idx}`} className="h-20 w-20 object-cover rounded-lg" />
+                    ))}
+                  </div>
+                )}
+                <div className="flex justify-end gap-4 pt-4">
+                  <button type="button" onClick={() => setEditingProduct(null)}
+                    className="px-4 py-2 rounded-lg border hover:bg-gray-50 transition">Cancel</button>
+                  <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition">Update Product</button>
                 </div>
               </form>
             </motion.div>

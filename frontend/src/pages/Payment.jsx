@@ -74,7 +74,7 @@ const Payment = () => {
               products: cartItems.map((item) => ({
                 productId: item.product._id,
                 quantity: item.quantity,
-                price: item.product.price,
+                price: item.product.discountPrice > 0 ? item.product.discountPrice : item.product.price,
               })),
               cartItems,
               address,

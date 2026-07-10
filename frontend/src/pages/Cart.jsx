@@ -106,7 +106,7 @@ const Cart = () => {
 
     setCheckingOut(true);
     const orderData = {
-      products: cartItems.map((i) => ({ productId: i.product._id, quantity: i.quantity, price: i.product.price })),
+      products: cartItems.map((i) => ({ productId: i.product._id, quantity: i.quantity, price: i.product.discountPrice > 0 ? i.product.discountPrice : i.product.price })),
       cartItems,
       address,
       paymentMethod,

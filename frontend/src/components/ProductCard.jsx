@@ -50,9 +50,9 @@ const ProductCard = ({ product }) => {
 
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-baseline gap-1.5">
-            <span className="text-orange-500 font-bold text-lg">₹{product.price}</span>
+            <span className="text-orange-500 font-bold text-lg">₹{product.discountPrice > 0 ? product.discountPrice : product.price}</span>
             {product.discountPrice > 0 && (
-              <span className="text-gray-400 text-xs line-through">₹{product.discountPrice}</span>
+              <span className="text-gray-400 text-xs line-through">₹{product.price}</span>
             )}
           </div>
           <span className="flex items-center gap-1 text-yellow-500 text-xs font-medium">
