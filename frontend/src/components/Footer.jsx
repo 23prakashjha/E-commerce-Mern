@@ -16,10 +16,9 @@ const Footer = () => {
   const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
 
   return (
-    <footer className="bg-gray-900 text-gray-300 mt-16 relative">
+    <footer className="bg-gray-900 dark:bg-gray-950 text-gray-300 mt-16 relative">
       <div className="max-w-7xl mx-auto px-6 py-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8">
 
-        {/* ================= BRAND (spans 4 cols) ================= */}
         <div className="sm:col-span-2 lg:col-span-4">
           <div className="flex items-center gap-3 mb-4">
             <div className="bg-linear-to-r from-indigo-500 to-indigo-600 p-3 rounded-full shadow-lg">
@@ -29,26 +28,19 @@ const Footer = () => {
               Shop<span className="text-indigo-500">Ease</span>
             </h2>
           </div>
-
           <p className="text-sm leading-relaxed text-gray-400 mb-4 max-w-xs">
             ShopEase is your ultimate destination for premium products, secure payments, and fast delivery.
           </p>
-
           <div className="flex gap-3">
             {[Facebook, Twitter, Instagram, Linkedin].map((Icon, idx) => (
-              <a
-                key={idx}
-                href="#"
-                aria-label="Social media"
-                className="p-2.5 rounded-full bg-gray-800 hover:bg-indigo-500 transition transform hover:scale-110 shadow-lg"
-              >
+              <a key={idx} href="#" aria-label="Social media"
+                className="p-2.5 rounded-full bg-gray-800 dark:bg-gray-800 hover:bg-indigo-500 transition transform hover:scale-110 shadow-lg">
                 <Icon size={16} />
               </a>
             ))}
           </div>
         </div>
 
-        {/* ================= QUICK LINKS (spans 2 cols) ================= */}
         <div className="lg:col-span-2">
           <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Quick Links</h3>
           <ul className="space-y-3 text-sm">
@@ -68,7 +60,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* ================= SUPPORT (spans 2 cols) ================= */}
         <div className="lg:col-span-2">
           <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Support</h3>
           <ul className="space-y-3 text-sm">
@@ -83,7 +74,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* ================= NEWSLETTER (spans 4 cols) ================= */}
         <div className="sm:col-span-2 lg:col-span-4">
           <h3 className="text-white font-semibold mb-2 text-sm uppercase tracking-wider">Newsletter</h3>
           <p className="text-sm text-gray-400 mb-4">Get updates on new arrivals and exclusive deals.</p>
@@ -93,7 +83,7 @@ const Footer = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
-              className="px-4 py-2.5 rounded-lg flex-1 focus:outline-none focus:ring-2 focus:ring-indigo-400 border border-gray-700 bg-gray-800 placeholder-gray-500 text-sm"
+              className="px-4 py-2.5 rounded-lg flex-1 focus:outline-none focus:ring-2 focus:ring-indigo-400 border border-gray-700 bg-gray-800 placeholder-gray-500 text-sm text-gray-200"
             />
             <button
               type="submit"
@@ -105,8 +95,7 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* ================= BOTTOM BAR ================= */}
-      <div className="border-t border-gray-800">
+      <div className="border-t border-gray-800 dark:border-gray-800/50">
         <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row items-center justify-between text-sm text-gray-400 gap-2">
           <p>&copy; {new Date().getFullYear()} ShopEase. All rights reserved.</p>
           <p className="flex items-center gap-1">
@@ -115,7 +104,6 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* ================= BACK TO TOP ================= */}
       <button
         onClick={scrollToTop}
         className="absolute -top-5 right-6 bg-indigo-500 hover:bg-indigo-600 text-white p-3 rounded-full shadow-lg hover:shadow-xl transition hover:-translate-y-1"

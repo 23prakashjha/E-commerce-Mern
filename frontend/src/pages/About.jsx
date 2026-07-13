@@ -112,13 +112,13 @@ const About = () => {
             initial={{ opacity: 0, x: -40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="bg-white p-10 rounded-3xl shadow-lg hover:shadow-2xl transition group"
+            className="bg-white dark:bg-gray-900 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition group"
           >
             <div className="w-16 h-16 rounded-2xl bg-orange-500/10 group-hover:bg-orange-500 transition flex items-center justify-center mb-6">
               <Target className="w-8 h-8 text-orange-500 group-hover:text-white transition" />
             </div>
             <h3 className="text-2xl font-bold mb-4">Our Mission</h3>
-            <p className="text-gray-600 leading-relaxed text-lg">
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
               To democratize quality shopping by providing a seamless, secure, and delightful e-commerce experience
               that empowers customers to discover and purchase products they love, at prices they deserve.
             </p>
@@ -128,13 +128,13 @@ const About = () => {
             initial={{ opacity: 0, x: 40 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="bg-white p-10 rounded-3xl shadow-lg hover:shadow-2xl transition group"
+            className="bg-white dark:bg-gray-900 p-10 rounded-3xl shadow-lg hover:shadow-2xl transition group"
           >
             <div className="w-16 h-16 rounded-2xl bg-orange-500/10 group-hover:bg-orange-500 transition flex items-center justify-center mb-6">
               <Eye className="w-8 h-8 text-orange-500 group-hover:text-white transition" />
             </div>
             <h3 className="text-2xl font-bold mb-4">Our Vision</h3>
-            <p className="text-gray-600 leading-relaxed text-lg">
+            <p className="text-gray-600 dark:text-gray-300 leading-relaxed text-lg">
               To become the world's most trusted and customer-centric e-commerce platform, where every purchase
               feels personal, every delivery brings joy, and every interaction builds lasting trust.
             </p>
@@ -172,7 +172,7 @@ const About = () => {
           <h2 className="text-3xl sm:text-4xl font-bold mt-2">
             Why Choose <span className="text-orange-500">Us</span>
           </h2>
-          <p className="text-gray-500 mt-3 max-w-xl mx-auto">Six pillars that make ShopEase the preferred choice for millions.</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-xl mx-auto">Six pillars that make ShopEase the preferred choice for millions.</p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -185,7 +185,7 @@ const About = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group bg-white/80 backdrop-blur-xl p-8 rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all text-center border border-gray-100"
+                className="group bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-8 rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all text-center border border-gray-100 dark:border-gray-700"
               >
                 <div className="flex justify-center mb-6">
                   <div className="p-4 rounded-2xl bg-orange-500/10 group-hover:bg-orange-500 transition">
@@ -193,7 +193,7 @@ const About = () => {
                   </div>
                 </div>
                 <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+                <p className="text-gray-600 dark:text-gray-300 leading-relaxed">{item.desc}</p>
               </motion.div>
             );
           })}
@@ -205,7 +205,7 @@ const About = () => {
         <div className="text-center mb-16">
           <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Our Story</span>
           <h2 className="text-3xl sm:text-4xl font-bold mt-2">The Journey So Far</h2>
-          <p className="text-gray-500 mt-3 max-w-xl mx-auto">From a simple idea to a global platform — here's how we grew.</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-xl mx-auto">From a simple idea to a global platform — here's how we grew.</p>
         </div>
 
         <div className="max-w-4xl mx-auto relative">
@@ -225,8 +225,8 @@ const About = () => {
               <div className="md:hidden w-20 shrink-0">
                 <span className="text-orange-500 font-bold text-lg">{year}</span>
               </div>
-              <div className="bg-white p-6 rounded-2xl shadow-md hover:shadow-xl transition flex-1 border-l-4 border-orange-400">
-                <p className="text-gray-700 leading-relaxed">{text}</p>
+              <div className="bg-white dark:bg-gray-900 p-6 rounded-2xl shadow-md hover:shadow-xl transition flex-1 border-l-4 border-orange-400">
+                <p className="text-gray-700 dark:text-gray-200 leading-relaxed">{text}</p>
               </div>
             </motion.div>
           ))}
@@ -238,7 +238,7 @@ const About = () => {
         <div className="text-center mb-16">
           <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Leadership</span>
           <h2 className="text-3xl sm:text-4xl font-bold mt-2">Meet Our <span className="text-orange-500">Team</span></h2>
-          <p className="text-gray-500 mt-3 max-w-xl mx-auto">Talented people behind ShopEase working hard every day.</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-xl mx-auto">Talented people behind ShopEase working hard every day.</p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -249,25 +249,25 @@ const About = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="group bg-white rounded-3xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all text-center border border-gray-100"
+              className="group bg-white dark:bg-gray-900 rounded-3xl p-8 shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all text-center border border-gray-100 dark:border-gray-700"
             >
-              <div className="w-24 h-24 mx-auto mb-5 rounded-full overflow-hidden ring-4 ring-orange-200 group-hover:ring-orange-500 transition">
+              <div className="w-24 h-24 mx-auto mb-5 rounded-full overflow-hidden ring-4 ring-orange-200 dark:ring-orange-800 group-hover:ring-orange-500 transition">
                 <img src={member.img} alt={member.name} className="w-full h-full object-cover" />
               </div>
               <h3 className="text-xl font-bold mb-1">{member.name}</h3>
               <p className="text-orange-500 font-semibold text-sm mb-3">{member.role}</p>
-              <p className="text-gray-500 text-sm leading-relaxed">{member.bio}</p>
+              <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">{member.bio}</p>
             </motion.div>
           ))}
         </div>
       </section>
 
       {/* ================= TESTIMONIALS ================= */}
-      <section className="mb-28 rounded-3xl bg-gray-50 py-20 px-6">
+      <section className="mb-28 rounded-3xl bg-gray-50 dark:bg-gray-800 py-20 px-6">
         <div className="text-center mb-16">
           <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Testimonials</span>
           <h2 className="text-3xl sm:text-4xl font-bold mt-2">What Our <span className="text-orange-500">Customers</span> Say</h2>
-          <p className="text-gray-500 mt-3 max-w-xl mx-auto">Real reviews from real people who love shopping with us.</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-xl mx-auto">Real reviews from real people who love shopping with us.</p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
@@ -278,18 +278,18 @@ const About = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="bg-white p-8 rounded-3xl shadow-md hover:shadow-xl transition relative"
+              className="bg-white dark:bg-gray-900 p-8 rounded-3xl shadow-md hover:shadow-xl transition relative"
             >
               <Quote className="absolute top-4 right-4 w-8 h-8 text-orange-100" />
               <div className="flex gap-1 mb-4">
                 {Array.from({ length: 5 }).map((_, idx) => (
-                  <Star key={idx} className={`w-4 h-4 ${idx < t.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-200"}`} />
+                  <Star key={idx} className={`w-4 h-4 ${idx < t.rating ? "text-yellow-400 fill-yellow-400" : "text-gray-200 dark:text-gray-600"}`} />
                 ))}
               </div>
-              <p className="text-gray-600 leading-relaxed mb-6 italic">"{t.text}"</p>
+              <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-6 italic">"{t.text}"</p>
               <div>
-                <p className="font-semibold text-gray-800">{t.name}</p>
-                <p className="text-sm text-gray-400">{t.role}</p>
+                <p className="font-semibold text-gray-800 dark:text-gray-100">{t.name}</p>
+                <p className="text-sm text-gray-400 dark:text-gray-500">{t.role}</p>
               </div>
             </motion.div>
           ))}
@@ -301,7 +301,7 @@ const About = () => {
         <div className="text-center mb-14">
           <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Partners</span>
           <h2 className="text-3xl sm:text-4xl font-bold mt-2">Trusted <span className="text-orange-500">Brands</span></h2>
-          <p className="text-gray-500 mt-3 max-w-xl mx-auto">We partner with the world's leading brands to bring you the best.</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-xl mx-auto">We partner with the world's leading brands to bring you the best.</p>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-4xl mx-auto">

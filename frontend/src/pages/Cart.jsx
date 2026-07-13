@@ -18,16 +18,16 @@ const addressFields = [
 const Skeleton = () => (
   <div className="space-y-6">
     {[1, 2, 3].map((i) => (
-      <div key={i} className="flex flex-col sm:flex-row items-center gap-4 bg-white p-4 rounded-2xl shadow animate-pulse">
-        <div className="w-full sm:w-32 h-32 rounded-xl bg-gray-200" />
+      <div key={i} className="flex flex-col sm:flex-row items-center gap-4 bg-white dark:bg-gray-900 p-4 rounded-2xl shadow animate-pulse">
+        <div className="w-full sm:w-32 h-32 rounded-xl bg-gray-200 dark:bg-gray-700" />
         <div className="flex-1 w-full space-y-3">
-          <div className="h-5 bg-gray-200 rounded w-3/4" />
-          <div className="h-4 bg-gray-200 rounded w-1/4" />
-          <div className="h-4 bg-gray-200 rounded w-1/3" />
+          <div className="h-5 bg-gray-200 dark:bg-gray-700 rounded w-3/4" />
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/4" />
+          <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/3" />
           <div className="flex gap-3 mt-4">
-            <div className="h-10 w-10 bg-gray-200 rounded" />
-            <div className="h-10 w-10 bg-gray-200 rounded" />
-            <div className="h-10 w-10 bg-gray-200 rounded ml-auto" />
+            <div className="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded" />
+            <div className="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded" />
+            <div className="h-10 w-10 bg-gray-200 dark:bg-gray-700 rounded ml-auto" />
           </div>
         </div>
       </div>
@@ -133,16 +133,16 @@ const Cart = () => {
   if (loading) {
     return (
       <div className="max-w-7xl mx-auto px-4 py-12">
-        <div className="h-8 w-48 bg-gray-200 rounded animate-pulse mb-8" />
+        <div className="h-8 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-8" />
         <div className="flex flex-col lg:flex-row gap-8">
           <div className="flex-1"><Skeleton /></div>
           <div className="lg:w-96">
-            <div className="bg-white p-6 rounded-3xl shadow-lg space-y-4 animate-pulse">
-              <div className="h-6 bg-gray-200 rounded w-1/2" />
+            <div className="bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-lg space-y-4 animate-pulse">
+              <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-1/2" />
               {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="h-5 bg-gray-200 rounded" />
+                <div key={i} className="h-5 bg-gray-200 dark:bg-gray-700 rounded" />
               ))}
-              <div className="h-12 bg-gray-200 rounded-xl mt-6" />
+              <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded-xl mt-6" />
             </div>
           </div>
         </div>
@@ -157,8 +157,8 @@ const Cart = () => {
           <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-orange-100 flex items-center justify-center">
             <ShoppingCart className="w-12 h-12 text-orange-500" />
           </div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-2">Your cart is empty</h2>
-          <p className="text-gray-500 mb-8 max-w-md mx-auto">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-2">Your cart is empty</h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-8 max-w-md mx-auto">
             Looks like you haven't added anything yet. Browse our collection and find something you love!
           </p>
           <Link
@@ -167,7 +167,7 @@ const Cart = () => {
           >
             <Package size={20} /> Start Shopping
           </Link>
-          <div className="mt-6 flex justify-center gap-6 text-sm text-gray-400">
+          <div className="mt-6 flex justify-center gap-6 text-sm text-gray-400 dark:text-gray-500">
             <span className="flex items-center gap-1"><Truck size={14} /> Free shipping</span>
             <span className="flex items-center gap-1"><ShieldCheck size={14} /> Secure checkout</span>
             <span className="flex items-center gap-1"><IndianRupee size={14} /> Easy returns</span>
@@ -180,7 +180,7 @@ const Cart = () => {
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex items-center gap-3 mb-8">
-        <Link to="/products" className="p-2 rounded-full hover:bg-gray-100 transition">
+        <Link to="/products" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition">
           <ArrowLeft size={20} />
         </Link>
         <h1 className="text-2xl sm:text-3xl font-extrabold">
@@ -200,9 +200,9 @@ const Cart = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, x: -50, height: 0, marginBottom: 0 }}
-                  className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-50"
+                  className="flex flex-col sm:flex-row items-start sm:items-center gap-4 bg-white dark:bg-gray-900 p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow border border-gray-50 dark:border-gray-700"
                 >
-                  <Link to={`/products/${p._id}`} className="shrink-0 w-full sm:w-28 h-28 rounded-xl overflow-hidden border border-gray-100">
+                  <Link to={`/products/${p._id}`} className="shrink-0 w-full sm:w-28 h-28 rounded-xl overflow-hidden border border-gray-100 dark:border-gray-700">
                     <img
                       src={getImageUrl(p)}
                       alt={p.name}
@@ -218,28 +218,28 @@ const Cart = () => {
                       </Link>
                       <button
                         onClick={() => removeItem(p._id)}
-                        className="shrink-0 p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition"
+                        className="shrink-0 p-2 rounded-lg text-gray-400 dark:text-gray-500 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition"
                         title="Remove item"
                       >
                         <Trash2 size={18} />
                       </button>
                     </div>
 
-                    <p className="text-sm text-gray-500 mt-0.5 capitalize">{p.category}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5 capitalize">{p.category}</p>
 
                     <div className="flex items-center justify-between mt-3">
                       <div className="flex items-center gap-1.5">
                         <button
                           onClick={() => updateQuantity(p._id, item.quantity - 1)}
                           disabled={item.quantity <= 1}
-                          className="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 disabled:opacity-40 disabled:cursor-not-allowed transition"
+                          className="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 disabled:opacity-40 disabled:cursor-not-allowed transition"
                         >
                           <Minus size={16} />
                         </button>
                         <span className="w-8 text-center font-semibold text-base">{item.quantity}</span>
                         <button
                           onClick={() => updateQuantity(p._id, item.quantity + 1)}
-                          className="p-1.5 rounded-lg bg-gray-100 hover:bg-gray-200 transition"
+                          className="p-1.5 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition"
                         >
                           <Plus size={16} />
                         </button>
@@ -248,7 +248,7 @@ const Cart = () => {
                       <div className="text-right">
                         <p className="text-orange-500 font-bold text-lg">₹{(p.price * item.quantity).toLocaleString()}</p>
                         {item.quantity > 1 && (
-                          <p className="text-xs text-gray-400">₹{p.price.toLocaleString()} each</p>
+                          <p className="text-xs text-gray-400 dark:text-gray-500">₹{p.price.toLocaleString()} each</p>
                         )}
                       </div>
                     </div>
@@ -260,20 +260,20 @@ const Cart = () => {
         </div>
 
         <div className="lg:w-96">
-          <div className="lg:sticky lg:top-24 bg-white p-6 sm:p-8 rounded-3xl shadow-lg border border-gray-50 space-y-6">
-            <h2 className="text-xl font-bold text-gray-800">Order Summary</h2>
+          <div className="lg:sticky lg:top-24 bg-white dark:bg-gray-900 p-6 sm:p-8 rounded-3xl shadow-lg border border-gray-50 dark:border-gray-700 space-y-6">
+            <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100">Order Summary</h2>
 
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
-                <span className="text-gray-600">Subtotal ({cartItems.reduce((s, i) => s + i.quantity, 0)} items)</span>
+                <span className="text-gray-600 dark:text-gray-300">Subtotal ({cartItems.reduce((s, i) => s + i.quantity, 0)} items)</span>
                 <span className="font-medium">₹{subtotal.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Tax (10%)</span>
+                <span className="text-gray-600 dark:text-gray-300">Tax (10%)</span>
                 <span className="font-medium">₹{tax.toLocaleString()}</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-gray-600">Shipping</span>
+                <span className="text-gray-600 dark:text-gray-300">Shipping</span>
                 <span className="font-medium">
                   {shipping === 0 ? (
                     <span className="text-green-600">FREE</span>
@@ -283,42 +283,42 @@ const Cart = () => {
                 </span>
               </div>
               {shipping > 0 && (
-                <p className="text-xs text-gray-400">Free shipping on orders over ₹500</p>
+                <p className="text-xs text-gray-400 dark:text-gray-500">Free shipping on orders over ₹500</p>
               )}
-              <div className="border-t pt-3 flex justify-between text-lg font-bold">
+              <div className="border-t dark:border-gray-700 pt-3 flex justify-between text-lg font-bold">
                 <span>Total</span>
                 <span className="text-orange-500">₹{total.toLocaleString()}</span>
               </div>
             </div>
 
-            <div className="border-t pt-6">
+            <div className="border-t dark:border-gray-700 pt-6">
               <h3 className="font-semibold text-sm flex items-center gap-2 mb-4">
                 <MapPin size={16} className="text-orange-500" /> Shipping Address
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {addressFields.map(({ key, label, type }) => (
                   <div key={key} className={key === "street" ? "sm:col-span-2" : ""}>
-                    <label className="block text-xs font-medium text-gray-500 mb-1">{label}</label>
+                    <label className="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1">{label}</label>
                     <input
                       type={type}
                       placeholder={label}
                       value={address[key]}
                       onChange={(e) => setAddress({ ...address, [key]: e.target.value })}
-                      className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-orange-400 outline-none transition"
+                      className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-orange-400 outline-none transition"
                     />
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="border-t pt-6">
+            <div className="border-t dark:border-gray-700 pt-6">
               <label className="font-semibold text-sm flex items-center gap-2 mb-3">
                 <CreditCard size={16} className="text-orange-500" /> Payment Method
               </label>
               <select
                 value={paymentMethod}
                 onChange={(e) => setPaymentMethod(e.target.value)}
-                className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-orange-400 outline-none"
+                className="w-full border border-gray-200 dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100 rounded-lg px-3 py-2.5 text-sm focus:ring-2 focus:ring-orange-400 outline-none"
               >
                 <option value="COD">Cash on Delivery (COD)</option>
                 <option value="Online">Online Payment</option>
@@ -343,7 +343,7 @@ const Cart = () => {
               )}
             </button>
 
-            <div className="flex items-center justify-center gap-4 text-xs text-gray-400 pt-2">
+            <div className="flex items-center justify-center gap-4 text-xs text-gray-400 dark:text-gray-500 pt-2">
               <span className="flex items-center gap-1"><ShieldCheck size={14} /> Secure</span>
               <span className="flex items-center gap-1"><Truck size={14} /> Fast delivery</span>
               <span className="flex items-center gap-1"><IndianRupee size={14} /> Easy returns</span>

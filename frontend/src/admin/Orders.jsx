@@ -83,25 +83,25 @@ const Orders = () => {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex items-center gap-3 mb-2">
         <ShoppingCart className="text-orange-500 w-8 h-8" />
-        <h1 className="text-3xl font-extrabold">All Orders</h1>
+        <h1 className="text-3xl font-extrabold dark:text-gray-100">All Orders</h1>
         <span className="bg-orange-100 text-orange-600 px-3 py-1 rounded-full text-sm font-semibold">{orders.length} total</span>
       </div>
-      <p className="text-gray-500 mb-6">Manage and track all customer orders</p>
+      <p className="text-gray-500 dark:text-gray-400 mb-6">Manage and track all customer orders</p>
 
       <div className="flex flex-col sm:flex-row gap-4 mb-6">
         <div className="relative w-full sm:w-80">
-          <Search className="absolute left-3 top-3 text-gray-400" />
+          <Search className="absolute left-3 top-3 text-gray-400 dark:text-gray-500" />
           <input
             placeholder="Search by Order ID, customer name or email..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-orange-400 outline-none"
+            className="w-full pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
           />
         </div>
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="border rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-orange-400 outline-none"
+          className="border rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
         >
           <option value="All">All Status</option>
           {Object.keys(statusColors).map((s) => (
@@ -111,8 +111,8 @@ const Orders = () => {
       </div>
 
       {filteredOrders.length === 0 && (
-        <div className="text-center py-24 text-gray-500">
-          <PackageCheck className="mx-auto mb-4 w-12 h-12 text-gray-400" />
+        <div className="text-center py-24 text-gray-500 dark:text-gray-400">
+          <PackageCheck className="mx-auto mb-4 w-12 h-12 text-gray-400 dark:text-gray-500" />
           <p className="text-lg font-medium">No orders found</p>
         </div>
       )}
@@ -126,31 +126,31 @@ const Orders = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
-              className="bg-white rounded-2xl shadow hover:shadow-lg transition p-6 flex flex-col border border-gray-100"
+              className="bg-white dark:bg-gray-900 rounded-2xl shadow hover:shadow-lg transition p-6 flex flex-col border border-gray-100 dark:border-gray-700"
             >
               <div className="flex justify-between items-start">
                 <div className="min-w-0">
-                  <p className="text-xs text-gray-400">ORDER ID</p>
+                  <p className="text-xs text-gray-400 dark:text-gray-500">ORDER ID</p>
                   <p className="font-semibold text-sm break-all">{order._id}</p>
                   {order.user && (
-                    <div className="flex items-center gap-1.5 mt-2 text-sm text-gray-600">
+                    <div className="flex items-center gap-1.5 mt-2 text-sm text-gray-600 dark:text-gray-300">
                       <User size={14} />
                       <span>{order.user.name}</span>
                     </div>
                   )}
                 </div>
                 <span className={`px-3 py-1 rounded-full text-sm font-semibold shrink-0 ${
-                  statusColors[order.orderStatus] || "bg-gray-100 text-gray-800"
+                  statusColors[order.orderStatus] || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
                 }`}>
                   {order.orderStatus || "Pending"}
                 </span>
               </div>
 
-              <div className="space-y-1 text-gray-700 mt-3">
-                {order.user?.email && <p className="text-xs text-gray-400 truncate">{order.user.email}</p>}
+              <div className="space-y-1 text-gray-700 dark:text-gray-200 mt-3">
+                {order.user?.email && <p className="text-xs text-gray-400 dark:text-gray-500 truncate">{order.user.email}</p>}
                 <p><strong>Total:</strong> ₹{order.totalPrice?.toFixed(2) || "0.00"}</p>
                 <p className="text-sm"><strong>Payment:</strong> {order.paymentMethod || "COD"}</p>
-                <p className="text-sm flex items-center gap-1 text-gray-500">
+                <p className="text-sm flex items-center gap-1 text-gray-500 dark:text-gray-400">
                   <Clock size={14} />
                   {order.createdAt ? new Date(order.createdAt).toLocaleString() : "N/A"}
                 </p>
@@ -172,7 +172,7 @@ const Orders = () => {
                     >
                       {order.orderItems?.map((item, idx) => (
                         <div key={item.product + "-" + idx}
-                          className="flex justify-between text-sm py-1.5 border-b last:border-b-0">
+                          className="flex justify-between text-sm py-1.5 border-b dark:border-gray-700 last:border-b-0">
                           <span className="truncate mr-2">{item.name} × {item.quantity}</span>
                           <span className="font-medium shrink-0">₹{(item.price * item.quantity).toFixed(2)}</span>
                         </div>

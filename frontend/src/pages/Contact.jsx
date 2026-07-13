@@ -92,8 +92,8 @@ const Contact = () => {
       <section className="mb-28">
         <div className="text-center mb-14">
           <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Get in Touch</span>
-          <h2 className="text-3xl sm:text-4xl font-bold mt-2">How to Reach <span className="text-orange-500">Us</span></h2>
-          <p className="text-gray-500 mt-3 max-w-xl mx-auto">Multiple ways to connect with our support team.</p>
+          <h2 className="text-3xl sm:text-4xl font-bold mt-2 dark:text-white">How to Reach <span className="text-orange-500">Us</span></h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-xl mx-auto">Multiple ways to connect with our support team.</p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -106,16 +106,16 @@ const Contact = () => {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="group bg-white/80 backdrop-blur-xl p-8 rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all text-center border border-gray-100"
+                className="group bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl p-8 rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition-all text-center border border-gray-100 dark:border-gray-700"
               >
                 <div className="flex justify-center mb-5">
                   <div className="p-4 rounded-2xl bg-orange-500/10 group-hover:bg-orange-500 transition">
                     <Icon className="w-8 h-8 text-orange-500 group-hover:text-white transition" />
                   </div>
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
-                <p className="text-gray-600">{item.desc}</p>
-                {item.extra && <p className="text-gray-400 text-sm mt-1">{item.extra}</p>}
+                <h3 className="text-xl font-semibold mb-2 dark:text-gray-100">{item.title}</h3>
+                <p className="text-gray-600 dark:text-gray-300">{item.desc}</p>
+                {item.extra && <p className="text-gray-400 dark:text-gray-500 text-sm mt-1">{item.extra}</p>}
               </motion.div>
             );
           })}
@@ -126,8 +126,8 @@ const Contact = () => {
       <section className="mb-28">
         <div className="text-center mb-14">
           <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Reach Out</span>
-          <h2 className="text-3xl sm:text-4xl font-bold mt-2">Send Us a <span className="text-orange-500">Message</span></h2>
-          <p className="text-gray-500 mt-3 max-w-xl mx-auto">Fill the form and we'll get back to you within 24 hours.</p>
+          <h2 className="text-3xl sm:text-4xl font-bold mt-2 dark:text-white">Send Us a <span className="text-orange-500">Message</span></h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-xl mx-auto">Fill the form and we'll get back to you within 24 hours.</p>
         </div>
 
         <div className="grid lg:grid-cols-2 gap-14 items-start">
@@ -137,28 +137,28 @@ const Contact = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.7 }}
           >
-            <form onSubmit={handleSubmit} className="bg-white p-10 rounded-3xl shadow-xl flex flex-col gap-5">
+            <form onSubmit={handleSubmit} className="bg-white dark:bg-gray-900 p-10 rounded-3xl shadow-xl flex flex-col gap-5">
               <div className="grid sm:grid-cols-2 gap-5">
                 <input
                   type="text" name="name" value={formData.name} onChange={handleChange}
                   placeholder="Your Name" required
-                  className="border border-gray-300 rounded-xl p-4 focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                  className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-orange-400 focus:outline-none"
                 />
                 <input
                   type="email" name="email" value={formData.email} onChange={handleChange}
                   placeholder="Your Email" required
-                  className="border border-gray-300 rounded-xl p-4 focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                  className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-orange-400 focus:outline-none"
                 />
               </div>
               <div className="grid sm:grid-cols-2 gap-5">
                 <input
                   type="text" name="subject" value={formData.subject} onChange={handleChange}
                   placeholder="Subject" required
-                  className="border border-gray-300 rounded-xl p-4 focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                  className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-orange-400 focus:outline-none"
                 />
                 <select
                   name="category" value={formData.category} onChange={handleChange}
-                  className="border border-gray-300 rounded-xl p-4 focus:ring-2 focus:ring-orange-400 focus:outline-none"
+                  className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-orange-400 focus:outline-none"
                 >
                   <option>General Inquiry</option>
                   <option>Order Support</option>
@@ -171,7 +171,7 @@ const Contact = () => {
               <textarea
                 name="message" value={formData.message} onChange={handleChange}
                 placeholder="Your Message" rows={5} required
-                className="border border-gray-300 rounded-xl p-4 focus:ring-2 focus:ring-orange-400 focus:outline-none resize-none"
+                className="border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-100 rounded-xl p-4 focus:ring-2 focus:ring-orange-400 focus:outline-none resize-none"
               />
               <button
                 type="submit"
@@ -217,8 +217,8 @@ const Contact = () => {
       <section className="mb-28">
         <div className="text-center mb-14">
           <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">Global Presence</span>
-          <h2 className="text-3xl sm:text-4xl font-bold mt-2">Our <span className="text-orange-500">Offices</span></h2>
-          <p className="text-gray-500 mt-3 max-w-xl mx-auto">We have offices around the world to serve you better.</p>
+          <h2 className="text-3xl sm:text-4xl font-bold mt-2 dark:text-white">Our <span className="text-orange-500">Offices</span></h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-xl mx-auto">We have offices around the world to serve you better.</p>
         </div>
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -229,13 +229,13 @@ const Contact = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1 }}
-              className="bg-white p-6 rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition border border-gray-100"
+              className="bg-white dark:bg-gray-900 p-6 rounded-3xl shadow-lg hover:shadow-2xl hover:-translate-y-2 transition border border-gray-100 dark:border-gray-700"
             >
               <div className="w-12 h-12 rounded-2xl bg-orange-500/10 flex items-center justify-center mb-4">
                 <Building2 className="w-6 h-6 text-orange-500" />
               </div>
-              <h3 className="text-xl font-bold mb-2">{office.city}</h3>
-              <p className="text-gray-600 text-sm leading-relaxed mb-3">{office.address}</p>
+              <h3 className="text-xl font-bold mb-2 dark:text-gray-100">{office.city}</h3>
+              <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed mb-3">{office.address}</p>
               <p className="text-orange-500 font-medium text-sm flex items-center gap-2">
                 <Phone className="w-4 h-4" /> {office.phone}
               </p>
@@ -245,11 +245,11 @@ const Contact = () => {
       </section>
 
       {/* ================= FAQ ================= */}
-      <section className="mb-28 rounded-3xl bg-gray-50 py-20 px-6">
+      <section className="mb-28 rounded-3xl bg-gray-50 dark:bg-gray-800 py-20 px-6">
         <div className="text-center mb-14">
           <span className="text-orange-500 font-semibold text-sm uppercase tracking-widest">FAQ</span>
-          <h2 className="text-3xl sm:text-4xl font-bold mt-2">Frequently Asked <span className="text-orange-500">Questions</span></h2>
-          <p className="text-gray-500 mt-3 max-w-xl mx-auto">Quick answers to common questions.</p>
+          <h2 className="text-3xl sm:text-4xl font-bold mt-2 dark:text-white">Frequently Asked <span className="text-orange-500">Questions</span></h2>
+          <p className="text-gray-500 dark:text-gray-400 mt-3 max-w-xl mx-auto">Quick answers to common questions.</p>
         </div>
 
         <div className="max-w-3xl mx-auto space-y-4">
@@ -260,14 +260,14 @@ const Contact = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.05 }}
-              className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden"
+              className="bg-white dark:bg-gray-900 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 overflow-hidden"
             >
               <button
                 onClick={() => setOpenFaq(openFaq === i ? null : i)}
-                className="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 hover:text-orange-500 transition"
+                className="w-full flex items-center justify-between p-5 text-left font-semibold text-gray-800 dark:text-gray-100 hover:text-orange-500 transition"
               >
                 <span>{faq.q}</span>
-                <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${openFaq === i ? "rotate-180 text-orange-500" : "text-gray-400"}`} />
+                <ChevronDown className={`w-5 h-5 transition-transform duration-300 ${openFaq === i ? "rotate-180 text-orange-500" : "text-gray-400 dark:text-gray-500"}`} />
               </button>
               <AnimatePresence>
                 {openFaq === i && (
@@ -278,7 +278,7 @@ const Contact = () => {
                     transition={{ duration: 0.3 }}
                     className="overflow-hidden"
                   >
-                    <p className="px-5 pb-5 text-gray-600 leading-relaxed border-t border-gray-100 pt-4">{faq.a}</p>
+                    <p className="px-5 pb-5 text-gray-600 dark:text-gray-300 leading-relaxed border-t border-gray-100 dark:border-gray-700 pt-4">{faq.a}</p>
                   </motion.div>
                 )}
               </AnimatePresence>

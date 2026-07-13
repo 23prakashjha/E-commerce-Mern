@@ -8,11 +8,11 @@ import { motion } from "framer-motion";
 const Skeleton = () => (
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
     {Array.from({ length: 8 }).map((_, i) => (
-      <div key={i} className="rounded-2xl bg-white shadow-sm overflow-hidden animate-pulse">
-        <div className="aspect-[4/5] bg-gray-200" />
+      <div key={i} className="rounded-2xl bg-white dark:bg-gray-900 shadow-sm overflow-hidden animate-pulse">
+        <div className="aspect-[4/5] bg-gray-200 dark:bg-gray-600" />
         <div className="p-4 space-y-3">
-          <div className="h-4 bg-gray-200 rounded w-3/4" />
-          <div className="h-4 bg-gray-200 rounded w-1/2" />
+          <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-3/4" />
+          <div className="h-4 bg-gray-200 dark:bg-gray-600 rounded w-1/2" />
         </div>
       </div>
     ))}
@@ -50,7 +50,7 @@ const CategoryProducts = () => {
     <div className="max-w-7xl mx-auto px-4 py-8">
       {/* Header */}
       <div className="flex items-center gap-3 mb-8">
-        <Link to="/products" className="p-2 rounded-full hover:bg-gray-100 transition">
+        <Link to="/products" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition">
           <ArrowLeft size={20} />
         </Link>
         <div>
@@ -63,7 +63,7 @@ const CategoryProducts = () => {
             </h1>
           </div>
           {!loading && (
-            <p className="text-gray-500 text-sm mt-1 ml-12">
+            <p className="text-gray-500 dark:text-gray-400 text-sm mt-1 ml-12">
               {products.length} {products.length === 1 ? "product" : "products"} found
             </p>
           )}
@@ -73,12 +73,12 @@ const CategoryProducts = () => {
       {loading && <Skeleton />}
 
       {!loading && products.length === 0 && (
-        <div className="text-center py-24 bg-white rounded-3xl shadow-sm border border-gray-50">
+        <div className="text-center py-24 bg-white dark:bg-gray-900 rounded-3xl shadow-sm border border-gray-50 dark:border-gray-700">
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-orange-100 flex items-center justify-center">
             <Package size={40} className="text-orange-500" />
           </div>
-          <h2 className="text-xl font-bold text-gray-800 mb-2">No products found</h2>
-          <p className="text-gray-500 mb-6 max-w-sm mx-auto">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">No products found</h2>
+          <p className="text-gray-500 dark:text-gray-400 mb-6 max-w-sm mx-auto">
             We couldn't find any products in the &quot;{displayCategory}&quot; category. Check back later or browse all products.
           </p>
           <Link
@@ -101,9 +101,9 @@ const CategoryProducts = () => {
             >
               <Link
                 to={`/products/${p._id}`}
-                className="block bg-white rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden group hover:-translate-y-1"
+                className="block bg-white dark:bg-gray-900 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 overflow-hidden group hover:-translate-y-1"
               >
-                <div className="aspect-[4/5] overflow-hidden bg-gray-50">
+                <div className="aspect-[4/5] overflow-hidden bg-gray-50 dark:bg-gray-800">
                   <img
                     src={getImageUrl(p)}
                     alt={p.name}
@@ -112,16 +112,16 @@ const CategoryProducts = () => {
                   />
                 </div>
                 <div className="p-4">
-                  <h3 className="font-semibold text-sm sm:text-base truncate group-hover:text-orange-500 transition-colors">
+                  <h3 className="font-semibold text-sm sm:text-base truncate group-hover:text-orange-500 dark:text-gray-100 transition-colors">
                     {p.name}
                   </h3>
                   <div className="flex items-baseline gap-2 mt-2">
                     <span className="text-orange-500 font-bold text-lg">₹{p.discountPrice > 0 ? p.discountPrice : p.price}</span>
                     {p.discountPrice > 0 && (
-                      <span className="text-gray-400 text-sm line-through">₹{p.price}</span>
+                      <span className="text-gray-400 dark:text-gray-500 text-sm line-through">₹{p.price}</span>
                     )}
                   </div>
-                  <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                  <div className="flex items-center gap-3 mt-2 text-xs text-gray-500 dark:text-gray-400">
                     <span className="flex items-center gap-1 text-yellow-500 font-medium">
                       <Star size={12} className="fill-yellow-500" /> {p.rating || 0}
                     </span>
@@ -130,7 +130,7 @@ const CategoryProducts = () => {
                     </span>
                   </div>
                   {p.description && (
-                    <p className="text-gray-400 text-xs mt-2 line-clamp-2">{p.description}</p>
+                    <p className="text-gray-400 dark:text-gray-500 text-xs mt-2 line-clamp-2">{p.description}</p>
                   )}
                 </div>
               </Link>

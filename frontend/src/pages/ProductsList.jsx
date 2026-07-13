@@ -94,8 +94,8 @@ const ProductsList = () => {
     <div className="max-w-7xl mx-auto px-4 py-8">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-extrabold">Explore Products</h1>
-          <p className="text-gray-500 mt-1">{filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""} found</p>
+          <h1 className="text-3xl font-extrabold dark:text-gray-100">Explore Products</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">{filteredProducts.length} product{filteredProducts.length !== 1 ? "s" : ""} found</p>
         </div>
         <button
           onClick={() => setShowFilters(!showFilters)}
@@ -108,22 +108,22 @@ const ProductsList = () => {
       <div className={`${showFilters ? "block" : "hidden"} sm:block`}>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
           <div className="relative">
-            <Search className="absolute left-3 top-3 text-gray-400" size={18} />
+            <Search className="absolute left-3 top-3 text-gray-400 dark:text-gray-500" size={18} />
             <input
               type="text"
               placeholder="Search products..."
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-orange-400 outline-none"
+              className="w-full pl-10 pr-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
             />
             {search && (
-              <button onClick={() => handleSearch("")} className="absolute right-3 top-3 text-gray-400 hover:text-gray-600 text-sm">Clear</button>
+              <button onClick={() => handleSearch("")} className="absolute right-3 top-3 text-gray-400 dark:text-gray-500 hover:text-gray-600 dark:hover:text-gray-300 text-sm">Clear</button>
             )}
           </div>
-          <select value={category} onChange={(e) => handleCategory(e.target.value)} className="border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-400">
+          <select value={category} onChange={(e) => handleCategory(e.target.value)} className="border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-400 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600">
             {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
-          <select value={sort} onChange={(e) => handleSort(e.target.value)} className="border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-400">
+          <select value={sort} onChange={(e) => handleSort(e.target.value)} className="border rounded-xl px-4 py-2.5 outline-none focus:ring-2 focus:ring-orange-400 dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600">
             <option value="">Sort by</option>
             <option value="low">Price: Low to High</option>
             <option value="high">Price: High to Low</option>
@@ -133,16 +133,16 @@ const ProductsList = () => {
 
       {filteredProducts.length === 0 ? (
         <div className="text-center py-24">
-          <Search className="mx-auto w-16 h-16 text-gray-300 mb-4" />
-          <p className="text-gray-500 text-xl font-medium">No products found</p>
-          <p className="text-gray-400 mt-1">Try adjusting your search or filters</p>
+          <Search className="mx-auto w-16 h-16 text-gray-300 dark:text-gray-600 mb-4" />
+          <p className="text-gray-500 dark:text-gray-400 text-xl font-medium">No products found</p>
+          <p className="text-gray-400 dark:text-gray-500 mt-1">Try adjusting your search or filters</p>
           <button onClick={() => { setSearch(""); setCategory("All"); setSort(""); setPage(1); }} className="mt-6 bg-orange-500 text-white px-6 py-2 rounded-xl font-semibold hover:bg-orange-600 transition">
             Reset Filters
           </button>
         </div>
       ) : (
         <>
-          <div className="flex items-center justify-between mb-4 text-sm text-gray-500">
+          <div className="flex items-center justify-between mb-4 text-sm text-gray-500 dark:text-gray-400">
             <span>Showing {startItem}–{endItem} of {filteredProducts.length}</span>
             <span className="hidden sm:block">Page {safePage} of {totalPages}</span>
           </div>
@@ -151,8 +151,8 @@ const ProductsList = () => {
             {paginatedProducts.map((p) => {
               const outOfStock = p.countInStock != null && p.countInStock <= 0;
               return (
-                <Link to={`/products/${p._id}`} key={p._id} className="bg-white rounded-2xl shadow hover:shadow-xl transition overflow-hidden group relative flex flex-col">
-                  <div className="relative h-60 w-full overflow-hidden bg-gray-100">
+                <Link to={`/products/${p._id}`} key={p._id} className="bg-white dark:bg-gray-900 rounded-2xl shadow hover:shadow-xl transition overflow-hidden group relative flex flex-col">
+                  <div className="relative h-60 w-full overflow-hidden bg-gray-100 dark:bg-gray-700">
                     {p.images && p.images.length > 0 ? (
                       <img
                         src={getImageUrl({ images: p.images, image: p.images[0] })}
@@ -163,8 +163,8 @@ const ProductsList = () => {
                     ) : (
                       <div className="flex items-center justify-center h-full">
                         <div className="text-center">
-                          <ImageOff size={32} className="mx-auto text-gray-300 mb-2" />
-                          <p className="text-xs text-gray-400">No image</p>
+                          <ImageOff size={32} className="mx-auto text-gray-300 dark:text-gray-600 mb-2" />
+                          <p className="text-xs text-gray-400 dark:text-gray-500">No image</p>
                         </div>
                       </div>
                     )}
@@ -181,17 +181,17 @@ const ProductsList = () => {
                     )}
                   </div>
                   <div className="p-4 flex flex-col flex-1">
-                    <h2 className="font-semibold text-base truncate group-hover:text-orange-500 transition-colors">{p.name}</h2>
-                    {p.description && <p className="text-sm text-gray-400 line-clamp-2 mt-1">{p.description}</p>}
+                    <h2 className="font-semibold text-base truncate group-hover:text-orange-500 transition-colors dark:text-gray-100">{p.name}</h2>
+                    {p.description && <p className="text-sm text-gray-400 dark:text-gray-500 line-clamp-2 mt-1">{p.description}</p>}
 
                     <div className="flex items-baseline gap-2 mt-2">
                       <p className="text-orange-500 font-bold text-lg">₹{p.discountPrice > 0 ? p.discountPrice : p.price}</p>
                       {p.discountPrice > 0 && (
-                        <span className="text-gray-400 text-sm line-through">₹{p.price}</span>
+                        <span className="text-gray-400 dark:text-gray-500 text-sm line-through">₹{p.price}</span>
                       )}
                     </div>
 
-                    <div className="flex items-center gap-3 mt-2 text-xs text-gray-500">
+                    <div className="flex items-center gap-3 mt-2 text-xs text-gray-500 dark:text-gray-400">
                       <span className="flex items-center gap-1 text-yellow-500 font-medium">
                         <Star size={12} className="fill-yellow-500" /> {p.rating || "0"}
                       </span>
@@ -202,11 +202,11 @@ const ProductsList = () => {
 
                     <div className="mt-auto pt-3">
                       {outOfStock ? (
-                        <span className="block w-full text-center text-sm text-red-400 font-medium py-2 border border-red-200 rounded-xl bg-red-50">
+                        <span className="block w-full text-center text-sm text-red-400 font-medium py-2 border border-red-200 dark:border-red-800 rounded-xl bg-red-50 dark:bg-red-900/20">
                           Unavailable
                         </span>
                       ) : (
-                        <span className="block w-full text-center text-sm text-orange-500 font-medium py-2 border border-orange-200 rounded-xl bg-orange-50/50 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
+                        <span className="block w-full text-center text-sm text-orange-500 font-medium py-2 border border-orange-200 dark:border-orange-800 rounded-xl bg-orange-50/50 dark:bg-orange-900/20 group-hover:bg-orange-500 group-hover:text-white transition-all duration-300">
                           <ShoppingCart size={14} className="inline mr-1.5" /> View Details
                         </span>
                       )}
@@ -222,13 +222,13 @@ const ProductsList = () => {
               <button
                 onClick={() => handlePageChange(safePage - 1)}
                 disabled={safePage === 1}
-                className="p-2.5 rounded-xl border hover:bg-orange-50 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                className="p-2.5 rounded-xl border dark:border-gray-700 hover:bg-orange-50 dark:hover:bg-orange-900/20 disabled:opacity-30 disabled:cursor-not-allowed transition"
               >
                 <ChevronLeft size={18} />
               </button>
               {getPageNumbers().map((p, i) =>
                 p === "..." ? (
-                  <span key={`dot-${i}`} className="px-2 text-gray-400">...</span>
+                  <span key={`dot-${i}`} className="px-2 text-gray-400 dark:text-gray-500">...</span>
                 ) : (
                   <motion.button
                     key={p}
@@ -237,7 +237,7 @@ const ProductsList = () => {
                     className={`min-w-[42px] h-[42px] rounded-xl font-semibold text-sm transition ${
                       p === safePage
                         ? "bg-orange-500 text-white shadow-lg"
-                        : "border hover:bg-orange-50 text-gray-700"
+                        : "border dark:border-gray-700 hover:bg-orange-50 dark:hover:bg-orange-900/20 text-gray-700 dark:text-gray-200"
                     }`}
                   >
                     {p}
@@ -247,7 +247,7 @@ const ProductsList = () => {
               <button
                 onClick={() => handlePageChange(safePage + 1)}
                 disabled={safePage === totalPages}
-                className="p-2.5 rounded-xl border hover:bg-orange-50 disabled:opacity-30 disabled:cursor-not-allowed transition"
+                className="p-2.5 rounded-xl border dark:border-gray-700 hover:bg-orange-50 dark:hover:bg-orange-900/20 disabled:opacity-30 disabled:cursor-not-allowed transition"
               >
                 <ChevronRight size={18} />
               </button>

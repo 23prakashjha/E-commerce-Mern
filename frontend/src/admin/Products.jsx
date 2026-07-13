@@ -144,21 +144,21 @@ const Products = () => {
 
   if (adminLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center dark:bg-gray-900">
         <span className="animate-spin h-12 w-12 border-4 border-orange-500 border-t-transparent rounded-full" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-6 max-w-7xl mx-auto dark:bg-gray-900 min-h-screen">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <div>
           <h1 className="text-3xl font-bold flex items-center gap-2">
             <Package className="text-orange-500" />
             Products
           </h1>
-          <p className="text-gray-500 mt-1">{products.length} products in inventory</p>
+          <p className="text-gray-500 dark:text-gray-400 mt-1">{products.length} products in inventory</p>
         </div>
         <button onClick={() => setShowModal(true)}
           className="bg-orange-500 hover:bg-orange-600 text-white px-5 py-2.5 rounded-xl flex items-center gap-2 shadow hover:shadow-lg transition">
@@ -169,12 +169,12 @@ const Products = () => {
 
       <div className="flex flex-col sm:flex-row sm:items-center gap-4 mb-6">
         <div className="relative w-full sm:w-72">
-          <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
-          <input placeholder="Search products..." className="w-full pl-10 pr-4 py-2.5 rounded-xl border focus:ring-2 focus:ring-orange-400 focus:outline-none"
+          <Search className="absolute left-3 top-3 text-gray-400 dark:text-gray-500 w-5 h-5" />
+          <input placeholder="Search products..." className="w-full pl-10 pr-4 py-2.5 rounded-xl border focus:ring-2 focus:ring-orange-400 focus:outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
             value={search} onChange={(e) => setSearch(e.target.value)} />
         </div>
         <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)}
-          className="border rounded-xl px-4 py-2.5 w-full sm:w-48 focus:ring-2 focus:ring-orange-400 outline-none">
+          className="border rounded-xl px-4 py-2.5 w-full sm:w-48 focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600">
           <option value="All">All</option>
           {allCategories.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
@@ -183,8 +183,8 @@ const Products = () => {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {filteredProducts.map((p) => (
           <motion.div key={p._id} whileHover={{ scale: 1.03 }}
-            className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-all overflow-hidden flex flex-col">
-            <div className="flex overflow-x-auto gap-3 p-3 bg-gray-50 cursor-pointer scrollbar-thin">
+            className="bg-white dark:bg-gray-900 rounded-3xl shadow-lg hover:shadow-2xl transition-all overflow-hidden flex flex-col">
+            <div className="flex overflow-x-auto gap-3 p-3 bg-gray-50 dark:bg-gray-800 cursor-pointer scrollbar-thin">
               {p.images.map((img, i) => (
                 <img key={i} src={getImageUrl({ images: [img], image: img })}
                   alt={p.name} className="h-60 w-60 min-w-[10rem] object-cover rounded-xl hover:scale-105 transition-transform duration-300"
@@ -197,22 +197,22 @@ const Products = () => {
                 <div className="flex items-baseline gap-2 mt-1">
                   <p className="text-orange-500 font-bold text-lg">₹{p.discountPrice > 0 ? p.discountPrice : p.price}</p>
                   {p.discountPrice > 0 && (
-                    <span className="text-gray-400 text-sm line-through">₹{p.price}</span>
+                    <span className="text-gray-400 dark:text-gray-500 text-sm line-through">₹{p.price}</span>
                   )}
                   {p.discountPrice > 0 && (
                     <span className="bg-green-100 text-green-700 text-xs font-bold px-1.5 py-0.5 rounded">{Math.round((1 - p.discountPrice / p.price) * 100)}% OFF</span>
                   )}
                 </div>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  <span className="inline-block bg-orange-50 text-orange-600 text-xs font-medium px-2 py-0.5 rounded-full">{p.category}</span>
-                  <span className="inline-block bg-blue-50 text-blue-600 text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <span className="inline-block bg-orange-50 text-orange-600 dark:bg-orange-900/20 dark:text-orange-400 text-xs font-medium px-2 py-0.5 rounded-full">{p.category}</span>
+                  <span className="inline-block bg-blue-50 text-blue-600 dark:bg-blue-900/20 dark:text-blue-400 text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
                     <Box size={10} /> Stock: {p.countInStock ?? 0}
                   </span>
-                  <span className="inline-block bg-yellow-50 text-yellow-600 text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <span className="inline-block bg-yellow-50 text-yellow-600 dark:bg-yellow-900/20 dark:text-yellow-400 text-xs font-medium px-2 py-0.5 rounded-full flex items-center gap-1">
                     <Star size={10} className="fill-yellow-500" /> {p.rating ?? 0} ({p.numReviews ?? 0})
                   </span>
                 </div>
-                {p.description && <p className="text-gray-600 mt-2 text-sm line-clamp-2">{p.description}</p>}
+                {p.description && <p className="text-gray-600 dark:text-gray-300 mt-2 text-sm line-clamp-2">{p.description}</p>}
               </div>
               <div className="flex gap-2 mt-4">
                 <button onClick={() => openEdit(p)}
@@ -236,58 +236,58 @@ const Products = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} exit={{ scale: 0.8 }}
-              className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl relative overflow-y-auto max-h-[90vh]">
-              <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onClick={() => { setShowModal(false); setNewCustomCategory(""); }}>
+              className="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-lg shadow-xl relative overflow-y-auto max-h-[90vh]">
+              <button className="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" onClick={() => { setShowModal(false); setNewCustomCategory(""); }}>
                 <X size={20} />
               </button>
               <h2 className="text-xl font-bold mb-4">Add New Product</h2>
               <form onSubmit={addProduct} className="space-y-4">
-                <input placeholder="Product name" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                <input placeholder="Product name" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                   value={newProduct.name} onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })} required />
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Original Price (₹)</label>
-                    <input type="number" placeholder="MRP / original price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 flex items-center gap-1"><Tag size={12} /> Original Price (₹)</label>
+                    <input type="number" placeholder="MRP / original price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={newProduct.price} onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })} required />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Sale Price (₹)</label>
-                    <input type="number" placeholder="Discounted selling price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 flex items-center gap-1"><Tag size={12} /> Sale Price (₹)</label>
+                    <input type="number" placeholder="Discounted selling price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={newProduct.discountPrice} onChange={(e) => setNewProduct({ ...newProduct, discountPrice: e.target.value })} />
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Box size={12} /> Stock</label>
-                    <input type="number" placeholder="Qty" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 flex items-center gap-1"><Box size={12} /> Stock</label>
+                    <input type="number" placeholder="Qty" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={newProduct.countInStock} onChange={(e) => setNewProduct({ ...newProduct, countInStock: e.target.value })} />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Star size={12} /> Rating (0-5)</label>
-                    <input type="number" step="0.1" min="0" max="5" placeholder="0-5" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 flex items-center gap-1"><Star size={12} /> Rating (0-5)</label>
+                    <input type="number" step="0.1" min="0" max="5" placeholder="0-5" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={newProduct.rating} onChange={(e) => setNewProduct({ ...newProduct, rating: e.target.value })} />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1">Reviews</label>
-                    <input type="number" placeholder="0" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Reviews</label>
+                    <input type="number" placeholder="0" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={newProduct.numReviews} onChange={(e) => setNewProduct({ ...newProduct, numReviews: e.target.value })} />
                   </div>
                 </div>
                 <div>
                   <select value={newProduct.category} onChange={(e) => setNewProduct({ ...newProduct, category: e.target.value })}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none">
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600">
                     {categories.map((c) => <option key={c} value={c}>{c === "Custom" ? "Custom Category" : c}</option>)}
                   </select>
                   {newProduct.category === "Custom" && (
-                    <input type="text" placeholder="Enter custom category name" className="w-full p-3 mt-2 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <input type="text" placeholder="Enter custom category name" className="w-full p-3 mt-2 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={newCustomCategory} onChange={(e) => setNewCustomCategory(e.target.value)} required />
                   )}
                 </div>
-                <textarea placeholder="Product description" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none resize-none"
+                <textarea placeholder="Product description" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none resize-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                   value={newProduct.description} onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })} rows={4} />
-                <label className="flex flex-col items-center gap-2 cursor-pointer border border-dashed p-4 rounded-lg hover:bg-orange-50 transition">
+                <label className="flex flex-col items-center gap-2 cursor-pointer border border-dashed p-4 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 transition">
                   <Upload className="text-orange-500 w-6 h-6" />
-                  <span className="text-gray-500">
+                  <span className="text-gray-500 dark:text-gray-400">
                     {newProduct.imagePreviews.length > 0 ? `${newProduct.imagePreviews.length} image(s) selected` : "Upload product images"}
                   </span>
                   <input type="file" multiple accept="image/*" className="hidden"
@@ -306,7 +306,7 @@ const Products = () => {
                 )}
                 <div className="flex justify-end gap-4 pt-4">
                   <button type="button" onClick={() => { setShowModal(false); setNewCustomCategory(""); }}
-                    className="px-4 py-2 rounded-lg border hover:bg-gray-50 transition">Cancel</button>
+                    className="px-4 py-2 rounded-lg border hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 dark:text-gray-300 transition">Cancel</button>
                   <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition">Add Product</button>
                 </div>
               </form>
@@ -320,58 +320,58 @@ const Products = () => {
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
             className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <motion.div initial={{ scale: 0.8 }} animate={{ scale: 1 }} exit={{ scale: 0.8 }}
-              className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-xl relative overflow-y-auto max-h-[90vh]">
-              <button className="absolute top-4 right-4 text-gray-500 hover:text-gray-700" onClick={() => setEditingProduct(null)}>
+              className="bg-white dark:bg-gray-900 rounded-2xl p-6 w-full max-w-lg shadow-xl relative overflow-y-auto max-h-[90vh]">
+              <button className="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" onClick={() => setEditingProduct(null)}>
                 <X size={20} />
               </button>
               <h2 className="text-xl font-bold mb-4">Edit Product</h2>
               <form onSubmit={updateProduct} className="space-y-4">
-                <input placeholder="Product name" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                <input placeholder="Product name" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                   value={editData.name || ""} onChange={(e) => setEditData({ ...editData, name: e.target.value })} required />
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Original Price (₹)</label>
-                    <input type="number" placeholder="MRP / original price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 flex items-center gap-1"><Tag size={12} /> Original Price (₹)</label>
+                    <input type="number" placeholder="MRP / original price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={editData.price || ""} onChange={(e) => setEditData({ ...editData, price: e.target.value })} required />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Tag size={12} /> Sale Price (₹)</label>
-                    <input type="number" placeholder="Discounted selling price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 flex items-center gap-1"><Tag size={12} /> Sale Price (₹)</label>
+                    <input type="number" placeholder="Discounted selling price" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={editData.discountPrice || ""} onChange={(e) => setEditData({ ...editData, discountPrice: e.target.value })} />
                   </div>
                 </div>
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Box size={12} /> Stock</label>
-                    <input type="number" placeholder="Qty" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 flex items-center gap-1"><Box size={12} /> Stock</label>
+                    <input type="number" placeholder="Qty" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={editData.countInStock || ""} onChange={(e) => setEditData({ ...editData, countInStock: e.target.value })} />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1 flex items-center gap-1"><Star size={12} /> Rating (0-5)</label>
-                    <input type="number" step="0.1" min="0" max="5" placeholder="0-5" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1 flex items-center gap-1"><Star size={12} /> Rating (0-5)</label>
+                    <input type="number" step="0.1" min="0" max="5" placeholder="0-5" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={editData.rating || ""} onChange={(e) => setEditData({ ...editData, rating: e.target.value })} />
                   </div>
                   <div>
-                    <label className="text-sm font-medium text-gray-600 mb-1">Reviews</label>
-                    <input type="number" placeholder="0" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <label className="text-sm font-medium text-gray-600 dark:text-gray-300 mb-1">Reviews</label>
+                    <input type="number" placeholder="0" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={editData.numReviews || ""} onChange={(e) => setEditData({ ...editData, numReviews: e.target.value })} />
                   </div>
                 </div>
                 <div>
                   <select value={editData.category || ""} onChange={(e) => setEditData({ ...editData, category: e.target.value })}
-                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none">
+                    className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600">
                     {categories.map((c) => <option key={c} value={c}>{c === "Custom" ? "Custom Category" : c}</option>)}
                   </select>
                   {editData.category === "Custom" && (
-                    <input type="text" placeholder="Enter custom category name" className="w-full p-3 mt-2 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none"
+                    <input type="text" placeholder="Enter custom category name" className="w-full p-3 mt-2 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                       value={editCustomCategory} onChange={(e) => setEditCustomCategory(e.target.value)} required />
                   )}
                 </div>
-                <textarea placeholder="Product description" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none resize-none"
+                <textarea placeholder="Product description" className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-orange-400 outline-none resize-none dark:bg-gray-900 dark:text-gray-100 dark:border-gray-600"
                   value={editData.description || ""} onChange={(e) => setEditData({ ...editData, description: e.target.value })} rows={4} />
-                <label className="flex flex-col items-center gap-2 cursor-pointer border border-dashed p-4 rounded-lg hover:bg-orange-50 transition">
+                <label className="flex flex-col items-center gap-2 cursor-pointer border border-dashed p-4 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 transition">
                   <Upload className="text-orange-500 w-6 h-6" />
-                  <span className="text-gray-500">
+                  <span className="text-gray-500 dark:text-gray-400">
                     {editPreviews.length > 0 ? `${editPreviews.length} new image(s) selected (replaces existing)` : "Upload new images (optional)"}
                   </span>
                   <input type="file" multiple accept="image/*" className="hidden"
@@ -392,7 +392,7 @@ const Products = () => {
                 )}
                 <div className="flex justify-end gap-4 pt-4">
                   <button type="button" onClick={() => setEditingProduct(null)}
-                    className="px-4 py-2 rounded-lg border hover:bg-gray-50 transition">Cancel</button>
+                    className="px-4 py-2 rounded-lg border hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-800 dark:text-gray-300 transition">Cancel</button>
                   <button type="submit" className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg transition">Update Product</button>
                 </div>
               </form>

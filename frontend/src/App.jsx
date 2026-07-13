@@ -24,7 +24,7 @@ const Products = lazy(() => import("./admin/Products"));
 const Orders = lazy(() => import("./admin/Orders"));
 
 const Loader = () => (
-  <div className="h-screen flex items-center justify-center text-xl font-semibold animate-pulse">
+  <div className="h-screen flex items-center justify-center text-xl font-semibold animate-pulse dark:text-gray-200">
     Loading...
   </div>
 );

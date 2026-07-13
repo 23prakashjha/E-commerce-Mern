@@ -24,7 +24,7 @@ const ImageZoom = ({ src, alt }) => {
   return (
     <div
       ref={containerRef}
-      className="lg:sticky top-24 rounded-3xl overflow-hidden bg-white shadow-2xl cursor-crosshair"
+      className="lg:sticky top-24 rounded-3xl overflow-hidden bg-white dark:bg-gray-900 shadow-2xl cursor-crosshair"
       style={{ height: "500px" }}
       onMouseEnter={() => setZooming(true)}
       onMouseLeave={() => setZooming(false)}
@@ -117,7 +117,7 @@ const ProductDetails = () => {
 
   if (!product) {
     return (
-      <div className="h-screen flex items-center justify-center text-2xl font-bold animate-pulse">
+      <div className="h-screen flex items-center justify-center text-2xl font-bold animate-pulse dark:text-gray-100">
         Loading...
       </div>
     );
@@ -142,7 +142,7 @@ const ProductDetails = () => {
                   className={`flex-shrink-0 w-16 h-16 lg:w-20 lg:h-20 rounded-xl overflow-hidden border-2 transition ${
                     selectedImage === i
                       ? "border-orange-500 ring-2 ring-orange-300"
-                      : "border-gray-200 hover:border-gray-400"
+                      : "border-gray-200 dark:border-gray-700 hover:border-gray-400 dark:hover:border-gray-500"
                   }`}
                 >
                   <img src={img} alt="" className="w-full h-full object-cover" />
@@ -156,7 +156,7 @@ const ProductDetails = () => {
         </div>
 
         <div className="space-y-6">
-          <h1 className="text-3xl md:text-4xl font-extrabold">{product.name}</h1>
+          <h1 className="text-3xl md:text-4xl font-extrabold dark:text-gray-100">{product.name}</h1>
 
           <div className="flex items-center gap-2">
             {[...Array(5)].map((_, i) => (
@@ -165,21 +165,21 @@ const ProductDetails = () => {
                 className={`w-5 h-5 ${
                   i < Math.round(product.rating || 4)
                     ? "text-orange-500 fill-orange-500"
-                    : "text-gray-300"
+                    : "text-gray-300 dark:text-gray-600"
                 }`}
               />
             ))}
-            <span className="text-sm text-gray-500">({product.numReviews || 0} reviews)</span>
+            <span className="text-sm text-gray-500 dark:text-gray-400">({product.numReviews || 0} reviews)</span>
           </div>
 
-          <p className="text-gray-600">{product.description}</p>
+          <p className="text-gray-600 dark:text-gray-300">{product.description}</p>
 
           <div className="flex items-baseline gap-3">
             {product.discountPrice > 0 ? (
               <>
                 <p className="text-4xl font-bold text-orange-500">₹{product.discountPrice.toFixed(2)}</p>
-                <p className="text-lg text-gray-400 line-through">₹{product.price.toFixed(2)}</p>
-                <span className="bg-green-100 text-green-700 text-sm font-bold px-2 py-0.5 rounded">
+                <p className="text-lg text-gray-400 dark:text-gray-500 line-through">₹{product.price.toFixed(2)}</p>
+                <span className="bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-sm font-bold px-2 py-0.5 rounded">
                   {Math.round((1 - product.discountPrice / product.price) * 100)}% OFF
                 </span>
               </>
@@ -189,7 +189,7 @@ const ProductDetails = () => {
           </div>
 
           <div>
-            <p className="font-semibold mb-2">Select Size</p>
+            <p className="font-semibold mb-2 dark:text-gray-100">Select Size</p>
             <div className="grid grid-cols-4 sm:grid-cols-6 gap-3">
               {sizes.map((size) => (
                 <button
@@ -198,7 +198,7 @@ const ProductDetails = () => {
                   className={`py-2 rounded-xl font-bold transition transform ${
                     selectedSize === size
                       ? "bg-orange-500 text-white scale-105 shadow-lg"
-                      : "border hover:border-orange-500 hover:scale-105"
+                      : "border dark:border-gray-600 hover:border-orange-500 hover:scale-105 dark:text-gray-100"
                   }`}
                 >
                   {size}
@@ -211,31 +211,31 @@ const ProductDetails = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            <button onClick={() => setQuantity((q) => Math.max(1, q - 1))} className="p-2 border rounded-xl hover:bg-gray-100"><Minus /></button>
-            <span className="font-bold text-xl">{quantity}</span>
-            <button onClick={() => setQuantity((q) => q + 1)} className="p-2 border rounded-xl hover:bg-gray-100"><Plus /></button>
+            <button onClick={() => setQuantity((q) => Math.max(1, q - 1))} className="p-2 border dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-100"><Minus /></button>
+            <span className="font-bold text-xl dark:text-gray-100">{quantity}</span>
+            <button onClick={() => setQuantity((q) => q + 1)} className="p-2 border dark:border-gray-600 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 dark:text-gray-100"><Plus /></button>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
             <button onClick={addToCart} className="flex-1 py-3 rounded-xl bg-orange-500 text-white font-bold hover:bg-orange-600 transition">
               Add to Cart
             </button>
-            <button onClick={toggleWishlist} className={`flex-1 py-3 rounded-xl border flex justify-center gap-2 ${isWishlisted ? "border-red-500 text-red-500" : "hover:border-orange-500"}`}>
+            <button onClick={toggleWishlist} className={`flex-1 py-3 rounded-xl border dark:border-gray-600 flex justify-center gap-2 dark:text-gray-100 ${isWishlisted ? "border-red-500 text-red-500" : "hover:border-orange-500"}`}>
               <Heart className={isWishlisted ? "fill-red-500" : ""} /> Wishlist
             </button>
           </div>
 
-          <div className="border-t pt-6 space-y-3">
-            <p className="text-sm text-gray-500 flex items-center gap-2"><Truck className="text-orange-500 w-4 h-4" /> Free delivery on orders over ₹500</p>
-            <p className="text-sm text-gray-500 flex items-center gap-2"><RefreshCcw className="text-orange-500 w-4 h-4" /> 30-day easy returns</p>
-            <p className="text-sm text-gray-500 flex items-center gap-2"><Headphones className="text-orange-500 w-4 h-4" /> 24/7 customer support</p>
+          <div className="border-t dark:border-gray-700 pt-6 space-y-3">
+            <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2"><Truck className="text-orange-500 w-4 h-4" /> Free delivery on orders over ₹500</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2"><RefreshCcw className="text-orange-500 w-4 h-4" /> 30-day easy returns</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2"><Headphones className="text-orange-500 w-4 h-4" /> 24/7 customer support</p>
           </div>
         </div>
       </div>
 
       {relatedProducts.length > 0 && (
         <section className="mt-24">
-          <h2 className="text-4xl font-extrabold text-center mb-10">Related Products</h2>
+          <h2 className="text-4xl font-extrabold text-center mb-10 dark:text-gray-100">Related Products</h2>
           <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
             {relatedProducts.map((p) => (
               <ProductCard key={p._id} product={p} />
